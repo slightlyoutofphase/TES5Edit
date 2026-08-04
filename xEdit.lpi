@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectOptions>
+    <Version Value="12"/>
+    <PathDelim Value="\"/>
+    <General>
+      <Flags>
+        <MainUnitHasUsesSectionForAllUnits Value="False"/>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+        <CompatibilityMode Value="True"/>
+      </Flags>
+      <SessionStorage Value="InProjectDir"/>
+      <Title Value="xEdit"/>
+      <Scaled Value="True"/>
+      <ResourceType Value="res"/>
+      <UseXPManifest Value="True"/>
+      <XPManifest>
+        <DpiAware Value="True"/>
+      </XPManifest>
+      <Icon Value="0"/>
+    </General>
+    <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <MajorVersionNr Value="4"/>
+      <MinorVersionNr Value="1"/>
+      <RevisionNr Value="5"/>
+      <BuildNr Value="0"/>
+      <StringTable FileDescription="xEdit" FileVersion="4.1.5.0" ProductName="xEdit" ProductVersion="4.1.5.0"/>
+    </VersionInfo>
+    <BuildModes Count="4">
+      <Item1 Name="Base" Default="True">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value=".\Build\xEdit"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir);.\External\delphi-detours-library\Source;.\External\Diff;.\External\DWScript\Source;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\JsonDataObjects\Source;.\External\SynEdit\Source;.\External\VirtualTrees\Source;.\Core;.\xEdit"/>
+            <OtherUnitFiles Value=".\External\delphi-detours-library\Source;.\External\Diff;.\External\DWScript\Source;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\JsonDataObjects\Source;.\External\SynEdit\Source;.\External\VirtualTrees\Source;.\Core;.\xEdit"/>
+            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="win64"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="True"/>
+              <UseLineInfoUnit Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER"/>
+          </Other>
+        </CompilerOptions>
+      </Item1>
+      <Item2 Name="Release">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value=".\Build\xEdit"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir);.\External\delphi-detours-library\Source;.\External\Diff;.\External\DWScript\Source;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\JsonDataObjects\Source;.\External\SynEdit\Source;.\External\VirtualTrees\Source;.\Core;.\xEdit"/>
+            <OtherUnitFiles Value=".\External\delphi-detours-library\Source;.\External\Diff;.\External\DWScript\Source;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\JsonDataObjects\Source;.\External\SynEdit\Source;.\External\VirtualTrees\Source;.\Core;.\xEdit"/>
+            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="win64"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="True"/>
+              <UseLineInfoUnit Value="True"/>
+              <StripSymbols Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER -dRELEASE"/>
+          </Other>
+        </CompilerOptions>
+      </Item2>
+      <Item3 Name="Debug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value=".\Build\xEdit"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir);.\External\delphi-detours-library\Source;.\External\Diff;.\External\DWScript\Source;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\JsonDataObjects\Source;.\External\SynEdit\Source;.\External\VirtualTrees\Source;.\Core;.\xEdit"/>
+            <OtherUnitFiles Value=".\External\delphi-detours-library\Source;.\External\Diff;.\External\DWScript\Source;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\JsonDataObjects\Source;.\External\SynEdit\Source;.\External\VirtualTrees\Source;.\Core;.\xEdit"/>
+            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="win64"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="True"/>
+              <UseLineInfoUnit Value="True"/>
+              <StripSymbols Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER -dDEBUG"/>
+          </Other>
+        </CompilerOptions>
+      </Item3>
+      <Item4 Name="LiteDebug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value=".\Build\xEdit"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir);.\External\delphi-detours-library\Source;.\External\Diff;.\External\DWScript\Source;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\JsonDataObjects\Source;.\External\SynEdit\Source;.\External\VirtualTrees\Source;.\Core;.\xEdit"/>
+            <OtherUnitFiles Value=".\External\delphi-detours-library\Source;.\External\Diff;.\External\DWScript\Source;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\JsonDataObjects\Source;.\External\SynEdit\Source;.\External\VirtualTrees\Source;.\Core;.\xEdit"/>
+            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="win64"/>
+            <Optimizations>
+              <OptimizationLevel Value="0"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="True"/>
+              <UseLineInfoUnit Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER -dLiteVersion"/>
+          </Other>
+        </CompilerOptions>
+      </Item4>
+    </BuildModes>
+    <RequiredPackages Count="2">
+      <Item1>
+        <PackageName Value="LCL"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="FCL"/>
+      </Item2>
+    </RequiredPackages>
+    <Units Count="10">
+      <Unit0>
+        <Filename Value="xEdit.lpr"/>
+        <IsPartOfProject Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="Core\wbBetterStringList.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbBetterStringList"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="Core\wbBSA.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbBSA"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="Core\wbCommandLine.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbCommandLine"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="Core\wbDataFormat.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbDataFormat"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="Core\wbDefinitionsCommon.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbDefinitionsCommon"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="Core\wbDefinitionsTES5.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbDefinitionsTES5"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="Core\wbHardcoded.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="wbHardcodedContainer"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="DataModule"/>
+        <UnitName Value="wbHardcoded"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="xEdit\xeInit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="xeInit"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="xEdit\xeMainForm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmMain"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="xeMainForm"/>
+      </Unit9>
+    </Units>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="11"/>
+    <PathDelim Value="\"/>
+    <Target>
+      <Filename Value=".\Build\xEdit"/>
+    </Target>
+    <SearchPaths>
+      <IncludeFiles Value="$(ProjOutDir);.\External\delphi-detours-library\Source;.\External\Diff;.\External\DWScript\Source;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\JsonDataObjects\Source;.\External\SynEdit\Source;.\External\VirtualTrees\Source;.\Core;.\xEdit"/>
+      <OtherUnitFiles Value=".\External\delphi-detours-library\Source;.\External\Diff;.\External\DWScript\Source;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\JsonDataObjects\Source;.\External\SynEdit\Source;.\External\VirtualTrees\Source;.\Core;.\xEdit"/>
+      <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+    </SearchPaths>
+    <Parsing>
+      <SyntaxOptions>
+        <SyntaxMode Value="Delphi"/>
+      </SyntaxOptions>
+    </Parsing>
+    <CodeGeneration>
+      <TargetCPU Value="x86_64"/>
+      <TargetOS Value="win64"/>
+    </CodeGeneration>
+    <Linking>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
+    </Linking>
+    <Other>
+      <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER"/>
+    </Other>
+  </CompilerOptions>
+</CONFIG>

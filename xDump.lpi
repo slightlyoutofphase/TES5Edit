@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectOptions>
+    <Version Value="12"/>
+    <PathDelim Value="\"/>
+    <General>
+      <Flags>
+        <MainUnitHasUsesSectionForAllUnits Value="False"/>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+        <CompatibilityMode Value="True"/>
+      </Flags>
+      <SessionStorage Value="InProjectDir"/>
+      <Title Value="xDump"/>
+      <Scaled Value="True"/>
+      <ResourceType Value="res"/>
+      <UseXPManifest Value="True"/>
+      <XPManifest>
+        <DpiAware Value="True"/>
+      </XPManifest>
+      <Icon Value="0"/>
+    </General>
+    <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <MajorVersionNr Value="4"/>
+      <MinorVersionNr Value="1"/>
+      <RevisionNr Value="5"/>
+      <BuildNr Value="0"/>
+      <StringTable FileDescription="xDump" FileVersion="4.1.5.0" ProductName="xDump" ProductVersion="4.1.5.0"/>
+    </VersionInfo>
+    <BuildModes Count="4">
+      <Item1 Name="Base" Default="True">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value=".\Build\xDump"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir);.\External\delphi-detours-library\Source;.\External\Diff;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\jcl\jcl\source\include;.\External\jcl\jcl\source\include\jedi;.\External\jcl\jcl\source\windows;.\External\jvcl\jvcl\common;.\External\jvcl\jvcl\resources;.\External\jvcl\jvcl\run;.\External\JsonDataObjects\Source;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\SynEdit\Source;.\External\TOM2;.\External\vcl-styles-utils\Common;.\External\VirtualTrees\Source;.\Core;.\xDump;.\xEdit"/>
+            <OtherUnitFiles Value=".\External\delphi-detours-library\Source;.\External\Diff;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\jcl\jcl\source\include;.\External\jcl\jcl\source\include\jedi;.\External\jcl\jcl\source\windows;.\External\jvcl\jvcl\common;.\External\jvcl\jvcl\resources;.\External\jvcl\jvcl\run;.\External\JsonDataObjects\Source;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\SynEdit\Source;.\External\TOM2;.\External\vcl-styles-utils\Common;.\External\VirtualTrees\Source;.\Core;.\xDump;.\xEdit"/>
+            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="win64"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="True"/>
+              <UseLineInfoUnit Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="False"/>
+              </Win32>
+            </Options>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER"/>
+          </Other>
+        </CompilerOptions>
+      </Item1>
+      <Item2 Name="Release">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value=".\Build\xDump"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir);.\External\delphi-detours-library\Source;.\External\Diff;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\jcl\jcl\source\include;.\External\jcl\jcl\source\include\jedi;.\External\jcl\jcl\source\windows;.\External\jvcl\jvcl\common;.\External\jvcl\jvcl\resources;.\External\jvcl\jvcl\run;.\External\JsonDataObjects\Source;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\SynEdit\Source;.\External\TOM2;.\External\vcl-styles-utils\Common;.\External\VirtualTrees\Source;.\Core;.\xDump;.\xEdit"/>
+            <OtherUnitFiles Value=".\External\delphi-detours-library\Source;.\External\Diff;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\jcl\jcl\source\include;.\External\jcl\jcl\source\include\jedi;.\External\jcl\jcl\source\windows;.\External\jvcl\jvcl\common;.\External\jvcl\jvcl\resources;.\External\jvcl\jvcl\run;.\External\JsonDataObjects\Source;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\SynEdit\Source;.\External\TOM2;.\External\vcl-styles-utils\Common;.\External\VirtualTrees\Source;.\Core;.\xDump;.\xEdit"/>
+            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="win64"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="True"/>
+              <UseLineInfoUnit Value="True"/>
+              <StripSymbols Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="False"/>
+              </Win32>
+            </Options>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER -dRELEASE"/>
+          </Other>
+        </CompilerOptions>
+      </Item2>
+      <Item3 Name="Debug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value=".\Build\xDump"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir);.\External\delphi-detours-library\Source;.\External\Diff;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\jcl\jcl\source\include;.\External\jcl\jcl\source\include\jedi;.\External\jcl\jcl\source\windows;.\External\jvcl\jvcl\common;.\External\jvcl\jvcl\resources;.\External\jvcl\jvcl\run;.\External\JsonDataObjects\Source;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\SynEdit\Source;.\External\TOM2;.\External\vcl-styles-utils\Common;.\External\VirtualTrees\Source;.\Core;.\xDump;.\xEdit"/>
+            <OtherUnitFiles Value=".\External\delphi-detours-library\Source;.\External\Diff;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\jcl\jcl\source\include;.\External\jcl\jcl\source\include\jedi;.\External\jcl\jcl\source\windows;.\External\jvcl\jvcl\common;.\External\jvcl\jvcl\resources;.\External\jvcl\jvcl\run;.\External\JsonDataObjects\Source;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\SynEdit\Source;.\External\TOM2;.\External\vcl-styles-utils\Common;.\External\VirtualTrees\Source;.\Core;.\xDump;.\xEdit"/>
+            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="win64"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="True"/>
+              <UseLineInfoUnit Value="True"/>
+              <StripSymbols Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="False"/>
+              </Win32>
+            </Options>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER -dDEBUG"/>
+          </Other>
+        </CompilerOptions>
+      </Item3>
+      <Item4 Name="LiteDebug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value=".\Build\xDump"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir);.\External\delphi-detours-library\Source;.\External\Diff;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\jcl\jcl\source\include;.\External\jcl\jcl\source\include\jedi;.\External\jcl\jcl\source\windows;.\External\jvcl\jvcl\common;.\External\jvcl\jvcl\resources;.\External\jvcl\jvcl\run;.\External\JsonDataObjects\Source;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\SynEdit\Source;.\External\TOM2;.\External\vcl-styles-utils\Common;.\External\VirtualTrees\Source;.\Core;.\xDump;.\xEdit"/>
+            <OtherUnitFiles Value=".\External\delphi-detours-library\Source;.\External\Diff;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\jcl\jcl\source\include;.\External\jcl\jcl\source\include\jedi;.\External\jcl\jcl\source\windows;.\External\jvcl\jvcl\common;.\External\jvcl\jvcl\resources;.\External\jvcl\jvcl\run;.\External\JsonDataObjects\Source;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\SynEdit\Source;.\External\TOM2;.\External\vcl-styles-utils\Common;.\External\VirtualTrees\Source;.\Core;.\xDump;.\xEdit"/>
+            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="win64"/>
+            <Optimizations>
+              <OptimizationLevel Value="0"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="True"/>
+              <UseLineInfoUnit Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="False"/>
+              </Win32>
+            </Options>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER -dLiteVersion"/>
+          </Other>
+        </CompilerOptions>
+      </Item4>
+    </BuildModes>
+    <RequiredPackages Count="1">
+      <Item1>
+        <PackageName Value="FCL"/>
+      </Item1>
+    </RequiredPackages>
+    <Units Count="25">
+      <Unit0>
+        <Filename Value="xDump.lpr"/>
+        <IsPartOfProject Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="Core\wbBSA.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbBSA"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="Core\wbCommandLine.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbCommandLine"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="Core\wbSort.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbSort"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="Core\wbInterface.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbInterface"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="Core\wbSaveInterface.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbSaveInterface"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="Core\wbImplementation.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbImplementation"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="Core\wbLocalization.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbLocalization"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="Core\wbHelpers.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbHelpers"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="Core\wbLoadOrder.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbLoadOrder"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="Core\wbHardcoded.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbHardcoded"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="Core\wbDefinitionsCommon.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbDefinitionsCommon"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="Core\wbDefinitionsFNV.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbDefinitionsFNV"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="Core\wbDefinitionsFNVSaves.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbDefinitionsFNVSaves"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="Core\wbDefinitionsFO3.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbDefinitionsFO3"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="Core\wbDefinitionsFO3Saves.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbDefinitionsFO3Saves"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="Core\wbDefinitionsFO4.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="$R *.res"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="wbDefinitionsFO4"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="Core\wbDefinitionsFO4Saves.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbDefinitionsFO4Saves"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="Core\wbDefinitionsFO76.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbDefinitionsFO76"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="Core\wbDefinitionsTES3.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbDefinitionsTES3"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="Core\wbDefinitionsTES4.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbDefinitionsTES4"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="Core\wbDefinitionsTES4Saves.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbDefinitionsTES4Saves"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="Core\wbDefinitionsTES5.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbDefinitionsTES5"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="Core\wbDefinitionsTES5Saves.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbDefinitionsTES5Saves"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="Core\wbDefinitionsSF1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbDefinitionsSF1"/>
+      </Unit24>
+    </Units>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="11"/>
+    <PathDelim Value="\"/>
+    <Target>
+      <Filename Value=".\Build\xDump"/>
+    </Target>
+    <SearchPaths>
+      <IncludeFiles Value="$(ProjOutDir);.\External\delphi-detours-library\Source;.\External\Diff;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\jcl\jcl\source\include;.\External\jcl\jcl\source\include\jedi;.\External\jcl\jcl\source\windows;.\External\jvcl\jvcl\common;.\External\jvcl\jvcl\resources;.\External\jvcl\jvcl\run;.\External\JsonDataObjects\Source;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\SynEdit\Source;.\External\TOM2;.\External\vcl-styles-utils\Common;.\External\VirtualTrees\Source;.\Core;.\xDump;.\xEdit"/>
+      <OtherUnitFiles Value=".\External\delphi-detours-library\Source;.\External\Diff;.\External\FileContainer;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\jcl\jcl\source\common;.\External\jcl\jcl\source\include;.\External\jcl\jcl\source\include\jedi;.\External\jcl\jcl\source\windows;.\External\jvcl\jvcl\common;.\External\jvcl\jvcl\resources;.\External\jvcl\jvcl\run;.\External\JsonDataObjects\Source;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\SynEdit\Source;.\External\TOM2;.\External\vcl-styles-utils\Common;.\External\VirtualTrees\Source;.\Core;.\xDump;.\xEdit"/>
+      <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+    </SearchPaths>
+    <Parsing>
+      <SyntaxOptions>
+        <SyntaxMode Value="Delphi"/>
+      </SyntaxOptions>
+    </Parsing>
+    <CodeGeneration>
+      <TargetCPU Value="x86_64"/>
+      <TargetOS Value="win64"/>
+    </CodeGeneration>
+    <Linking>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="False"/>
+        </Win32>
+      </Options>
+    </Linking>
+    <Other>
+      <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER"/>
+    </Other>
+  </CompilerOptions>
+</CONFIG>

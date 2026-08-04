@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectOptions>
+    <Version Value="12"/>
+    <PathDelim Value="\"/>
+    <General>
+      <Flags>
+        <MainUnitHasUsesSectionForAllUnits Value="False"/>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+        <CompatibilityMode Value="True"/>
+      </Flags>
+      <SessionStorage Value="InProjectDir"/>
+      <Title Value="Sniff"/>
+      <Scaled Value="True"/>
+      <ResourceType Value="res"/>
+      <UseXPManifest Value="True"/>
+      <XPManifest>
+        <DpiAware Value="True"/>
+      </XPManifest>
+      <Icon Value="0"/>
+    </General>
+    <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <MajorVersionNr Value="1"/>
+      <MinorVersionNr Value="9"/>
+      <RevisionNr Value="0"/>
+      <BuildNr Value="0"/>
+      <StringTable CompanyName="zilav" FileDescription="$(MSBuildProjectName)" FileVersion="1.9.0.0" InternalName="" LegalCopyright="MIT License Open Source" LegalTrademarks="" OriginalFilename="" ProgramID="com.embarcadero.$(MSBuildProjectName)" ProductName="$(MSBuildProjectName)" ProductVersion="1.0.0.0" Comments=""/>
+    </VersionInfo>
+    <BuildModes Count="3">
+      <Item1 Name="Base" Default="True">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value=".\Build\Sniff"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir);.\Core;.\Sniff;.\External\JsonDataObjects\Source;.\External\lz4-delphi;.\External\libdeflate-pas"/>
+            <OtherUnitFiles Value=".\Core;.\Sniff;.\External\JsonDataObjects\Source;.\External\lz4-delphi;.\External\libdeflate-pas"/>
+            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="win64"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="True"/>
+              <UseLineInfoUnit Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item1>
+      <Item2 Name="Debug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value=".\Build\Sniff"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir);.\Core;.\Sniff;.\External\JsonDataObjects\Source;.\External\lz4-delphi;.\External\libdeflate-pas"/>
+            <OtherUnitFiles Value=".\Core;.\Sniff;.\External\JsonDataObjects\Source;.\External\lz4-delphi;.\External\libdeflate-pas"/>
+            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="win64"/>
+            <Optimizations>
+              <OptimizationLevel Value="0"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="True"/>
+              <UseLineInfoUnit Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dDEBUG"/>
+          </Other>
+        </CompilerOptions>
+      </Item2>
+      <Item3 Name="Release">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value=".\Build\Sniff"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir);.\Core;.\Sniff;.\External\JsonDataObjects\Source;.\External\lz4-delphi;.\External\libdeflate-pas"/>
+            <OtherUnitFiles Value=".\Core;.\Sniff;.\External\JsonDataObjects\Source;.\External\lz4-delphi;.\External\libdeflate-pas"/>
+            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <SyntaxMode Value="Delphi"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="win64"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <UseLineInfoUnit Value="False"/>
+              <StripSymbols Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dRELEASE"/>
+          </Other>
+        </CompilerOptions>
+      </Item3>
+    </BuildModes>
+    <RequiredPackages Count="2">
+      <Item1>
+        <PackageName Value="LCL"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="FCL"/>
+      </Item2>
+    </RequiredPackages>
+    <Units Count="11">
+      <Unit0>
+        <Filename Value="Sniff.lpr"/>
+        <IsPartOfProject Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="Core\MSHeap.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="MSHeap"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="Core\wbBSArchive.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbBSArchive"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="Core\wbCommandLine.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbCommandLine"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="Core\wbDataFormat.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbDataFormat"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="Core\wbDDS.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="wbDDS"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="Sniff\SniffProcessor.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="SniffProcessor"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="Sniff\frmMain.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormMain"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="frmMain"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="Sniff\frMessages.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FrameMessages"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="frMessages"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="Sniff\Proc\ProcAddBoundingBox.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FrameAddBoundingBox"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="ProcAddBoundingBox"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="Sniff\Proc\ProcAddFacialAnim.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FrameAddFacialAnim"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="ProcAddFacialAnim"/>
+      </Unit10>
+    </Units>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="11"/>
+    <PathDelim Value="\"/>
+    <Target>
+      <Filename Value=".\Build\Sniff"/>
+    </Target>
+    <SearchPaths>
+      <IncludeFiles Value="$(ProjOutDir);.\Core;.\Sniff;.\External\JsonDataObjects\Source;.\External\lz4-delphi;.\External\libdeflate-pas"/>
+      <OtherUnitFiles Value=".\Core;.\Sniff;.\External\JsonDataObjects\Source;.\External\lz4-delphi;.\External\libdeflate-pas"/>
+      <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+    </SearchPaths>
+    <Parsing>
+      <SyntaxOptions>
+        <SyntaxMode Value="Delphi"/>
+      </SyntaxOptions>
+    </Parsing>
+    <CodeGeneration>
+      <TargetCPU Value="x86_64"/>
+      <TargetOS Value="win64"/>
+    </CodeGeneration>
+    <Linking>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
+    </Linking>
+  </CompilerOptions>
+</CONFIG>
