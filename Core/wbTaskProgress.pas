@@ -112,7 +112,7 @@ type
 
 implementation
 
-{$R *.dfm}
+{$R *.lfm}
 
 uses
   System.Win.ComObj,

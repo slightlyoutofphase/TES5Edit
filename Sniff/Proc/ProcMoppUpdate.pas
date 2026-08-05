@@ -81,7 +81,7 @@ type
 
 implementation
 
-{$R *.dfm}
+{$R *.lfm}
 
 uses
   Winapi.Windows,

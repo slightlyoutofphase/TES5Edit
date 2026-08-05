@@ -36,7 +36,7 @@ implementation
 uses
   wbInterface;
 
-{$R *.dfm}
+{$R *.lfm}
 
 { TwbHardcodedContainer }
 

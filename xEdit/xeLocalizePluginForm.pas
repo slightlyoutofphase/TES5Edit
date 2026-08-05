@@ -50,7 +50,7 @@ uses
 
   xeMainForm;
 
-{$R *.dfm}
+{$R *.lfm}
 
 
 procedure TfrmLocalizePlugin.cbTranslationClick(Sender: TObject);

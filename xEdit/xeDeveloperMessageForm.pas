@@ -65,7 +65,7 @@ type
 
 implementation
 
-{$R *.dfm}
+{$R *.lfm}
 
 uses
   Vcl.Styles.Utils.SystemMenu,

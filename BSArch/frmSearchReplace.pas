@@ -42,7 +42,7 @@ uses
 
   Winapi.Windows;
 
-{$R *.dfm}
+{$R *.lfm}
 
 //============================================================================
 procedure TFormSearchReplace.FormKeyDown(Sender: TObject; var Key: Word;

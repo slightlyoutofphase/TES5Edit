@@ -63,7 +63,7 @@ type
 
 implementation
 
-{$R *.dfm}
+{$R *.lfm}
 
 uses
   Vcl.Dialogs,

@@ -1289,7 +1289,7 @@ function IsPositionChanged(MainRecord: IwbMainRecord): Boolean;
 
 implementation
 
-{$R *.dfm}
+{$R *.lfm}
 
 uses
   System.Diagnostics,

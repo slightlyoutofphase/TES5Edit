@@ -127,7 +127,7 @@ uses
 
   xeMainForm;
 
-{$R *.dfm}
+{$R *.lfm}
 
 const
   sLineBreak = {$IFDEF LINUX} AnsiChar(#10) {$ENDIF}
