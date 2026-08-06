@@ -8,10 +8,12 @@
 
 unit wbDDS;
 
+{$modeswitch AutoDeref}
+
 interface
 
 uses
-  System.SysUtils;
+  SysUtils;
 
 type
   TMagic4 = array [0..3] of AnsiChar;
@@ -393,7 +395,7 @@ const
 implementation
 
 uses
-  System.TypInfo;
+  TypInfo;
 
 class function TwbDDS.IsDDS(aDDSData: Pointer; aSize: Integer): Boolean;
 begin

@@ -8,14 +8,18 @@
 
 unit wbCompression;
 
+{$mode Delphi}
+{$modeswitch inlinevars}
+
 interface
 
 uses
-  System.Classes,
-  System.SysUtils,
-  System.ZLib,
-
-  lz4d.lz4hc;
+  Classes,
+  SysUtils,
+  zlib,
+  ZLibUtils,
+  LZ4Mingw,
+  lz4d;
 
 type
   TwbCompressionType = (ctNone, ctZLib, ctLZ4, ctLZ4F);
@@ -56,11 +60,7 @@ type
 implementation
 
 uses
-  libdeflate,
-
-  lz4d,
-  lz4d.lz4,
-  lz4d.lz4frame;
+  libdeflate;
 
 { ZLib }
 
@@ -69,7 +69,7 @@ begin
   if aCode = aIgnoreCode then aCode := 0;
   Result := aCode;
   if aCode < 0 then
-    raise Exception.Create('ZLib error: ' + string(_z_errmsg[2 - aCode])) at ReturnAddress;
+    raise Exception.Create('ZLib error: ' + string(Zerror(2 - aCode)));
 end;
 
 procedure ZLibDecompress(const InBuf: Pointer; InSize: Integer;
@@ -96,9 +96,9 @@ function ZLibCompress(const InBuf: Pointer; InSize: Integer; var OutSize: Intege
 var
   DestLen: LongWord;
 begin
-  DestLen := System.ZLib.compressBound(InSize);
+  DestLen := compressBound(InSize);
   SetLength(Result, DestLen);
-  ZCheck( System.ZLib.compress2(Pointer(Result), DestLen, InBuf, InSize, aCompressionLevel) );
+  ZCheck( compress2(Pointer(Result), @DestLen, InBuf, InSize, aCompressionLevel) );
   OutSize := DestLen;
 end;
 
@@ -110,11 +110,11 @@ begin
   case aCode of
     LIBDEFLATE_SUCCESS: ;
     LIBDEFLATE_BAD_DATA:
-      raise Exception.Create('LibDeflate error: Bad data') at ReturnAddress;
+      raise Exception.Create('LibDeflate error: Bad data');
     LIBDEFLATE_SHORT_OUTPUT:
-      raise Exception.Create('LibDeflate error: Short output') at ReturnAddress;
+      raise Exception.Create('LibDeflate error: Short output');
     LIBDEFLATE_INSUFFICIENT_SPACE:
-      raise Exception.Create('LibDeflate error: Insufficient space') at ReturnAddress;
+      raise Exception.Create('LibDeflate error: Insufficient space');
   end;
 end;
 
@@ -145,7 +145,7 @@ begin
 
   try
     SetLength(Result, libdeflate_zlib_compress_bound(VZlib, InSize));
-    OutSize := libdeflate_zlib_compress(VZlib, InBuf, InSize, Result, Length(Result));
+    OutSize := libdeflate_zlib_compress(VZlib, InBuf, InSize, @Result, Length(Result));
     if OutSize = 0 then
       raise Exception.Create('LibDeflate error: Compression failed');
   finally
@@ -170,7 +170,7 @@ begin
   SetLength(Result, {$IFDEF WIN64}LZ4_compressBound{$ELSE}_LZ4_compressBound{$ENDIF}(inSize));
   // crashing bug in LZ4_compress_HC() if InBuf = 0 and InSize = 0, need to point to something allocated
   var p: Pointer; if InSize = 0 then p := Pointer(Result) else p := InBuf;
-  OutSize := {$IFDEF WIN64}LZ4_compress_HC{$ELSE}_LZ4_compress_HC{$ENDIF}(p, Result, InSize, Length(Result), aCompressionLevel);
+  OutSize := {$IFDEF WIN64}LZ4_compress_HC{$ELSE}_LZ4_compress_HC{$ENDIF}(p, @Result, InSize, Length(Result), aCompressionLevel);
   if OutSize = 0 then
     raise Exception.Create('LZ4 error: Compression failed');
 end;
@@ -181,7 +181,7 @@ end;
 procedure LZ4FCheck(const aMsg: string; aCode: NativeUInt);
 begin
   if {$IFDEF WIN64}LZ4F_isError{$ELSE}_LZ4F_isError{$ENDIF}(aCode) <> 0 then
-    raise Exception.CreateFmt(aMsg, [{$IFDEF WIN64}LZ4F_getErrorName{$ELSE}_LZ4F_getErrorName{$ENDIF}(aCode)]) at ReturnAddress;
+    raise Exception.CreateFmt(aMsg, [{$IFDEF WIN64}LZ4F_getErrorName{$ELSE}_LZ4F_getErrorName{$ENDIF}(aCode)]);
 end;
 
 procedure LZ4FDecompress(const InBuf: Pointer; InSize: NativeUInt;
@@ -236,7 +236,7 @@ begin
   prefs.frameInfo.blockSizeID := LZ4F_max4MB;
 
   SetLength(Result, {$IFDEF WIN64}LZ4F_compressFrameBound{$ELSE}_LZ4F_compressFrameBound{$ENDIF}(InSize, @prefs));
-  OutSize := {$IFDEF WIN64}LZ4F_compressFrame{$ELSE}_LZ4F_compressFrame{$ENDIF}(Result, Length(Result), InBuf, InSize, @prefs);
+  OutSize := {$IFDEF WIN64}LZ4F_compressFrame{$ELSE}_LZ4F_compressFrame{$ENDIF}(@Result, Length(Result), InBuf, InSize, @prefs);
   LZ4FCheck('LZ4F compression error: %s', OutSize);
 end;
 
@@ -266,18 +266,18 @@ begin
   SetLength(out_buff, outBuffSize);
   try
     // Write Archive Header
-    headerSize := {$IFDEF WIN64}LZ4F_compressBegin{$ELSE}_LZ4F_compressBegin{$ENDIF}(ctx, out_buff, outBuffSize, @prefs);
+    headerSize := {$IFDEF WIN64}LZ4F_compressBegin{$ELSE}_LZ4F_compressBegin{$ENDIF}(ctx, @out_buff, outBuffSize, @prefs);
     LZ4FCheck('LZ4F file header generation failed: %s', headerSize);
     aCompressed.Write(out_buff, headerSize);
     readSize := aSource.Read(in_buff, blockSize);
     while readSize > 0 do begin
-      outSize := {$IFDEF WIN64}LZ4F_compressUpdate{$ELSE}_LZ4F_compressUpdate{$ENDIF}(ctx, out_buff, outBuffSize, in_buff, readSize, nil);
+      outSize := {$IFDEF WIN64}LZ4F_compressUpdate{$ELSE}_LZ4F_compressUpdate{$ENDIF}(ctx, @out_buff, outBuffSize, @in_buff, readSize, nil);
       LZ4FCheck('LZ4F compression error: %s', outSize);
       aCompressed.Write(out_buff, outSize);
       readSize := aSource.Read(in_buff, blockSize);
     end;
     // End of Stream mark
-    headerSize := {$IFDEF WIN64}LZ4F_compressEnd{$ELSE}_LZ4F_compressEnd{$ENDIF}(ctx, out_buff, outBuffSize, nil);
+    headerSize := {$IFDEF WIN64}LZ4F_compressEnd{$ELSE}_LZ4F_compressEnd{$ENDIF}(ctx, @out_buff, outBuffSize, nil);
     LZ4FCheck('LZ4F end of file generation failed: %s', headerSize);
     aCompressed.Write(out_buff, headerSize);
   finally
@@ -375,7 +375,7 @@ begin
     case aType of
       ctZLib: begin
         if aCompressionLevel = -1 then aCompressionLevel := ZLIB_COMPRESSION_LEVEL;
-        System.ZLib.ZCompressStream(aSrc, aDst, TZCompressionLevel(aCompressionLevel));
+        ZCompressStream(aSrc, aDst, TZCompressionLevel(aCompressionLevel));
       end;
       ctLZ4F: begin
         if aCompressionLevel = -1 then aCompressionLevel := LZ4_COMPRESSION_LEVEL;
@@ -393,7 +393,7 @@ begin
   else begin
     SetLength(SrcBuf, SrcSize);
     aSrc.Read(SrcBuf, SrcSize);
-    Src := SrcBuf;
+    Src := @SrcBuf;
   end;
   Compress(aType, Src, SrcSize, aDst, aCompressionLevel);
 end;

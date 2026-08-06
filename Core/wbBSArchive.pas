@@ -8,13 +8,16 @@
 
 unit wbBSArchive;
 
+{$mode Delphi}
+{$modeswitch inlinevars}
+
 interface
 
 uses
-  System.Classes,
-  System.SyncObjs,
-  System.SysUtils,
-
+  Classes,
+  SyncObjs,
+  SysUtils,
+  LightweightMREW,
   wbCompression,
   wbDDS,
   wbHash,
@@ -144,7 +147,7 @@ type
     fArchiveSharedFiles: Integer;
     fArchiveSharedSize: Int64;
 
-    {$IF CompilerVersion >= 34.0} { Delphi 10.4 }
+    {$IF 1} { Delphi 10.4 }
     Sync: TLightweightMREW;
     {$ELSE}
     Sync: IReadWriteSync;
@@ -428,7 +431,7 @@ type
       DataIndices: array of Integer;
     end;
     DatasCount: Integer;
-    class operator Initialize(out Dest: TwbSameData);
+    class operator Initialize(var Dest: TwbSameData);
     procedure Add(aDataIndex: Integer; aData: Pointer; aDataSize: UInt64); overload;
     procedure Add(aDataIndex: Integer; const aData: TBytes); overload;
   end;
@@ -524,7 +527,7 @@ function FormatSize(Bytes: Int64): string;
 implementation
 
 uses
-  System.Math,
+  Math,
   System.IOUtils;
 
 const
@@ -805,7 +808,7 @@ end;
 
 { TwbSameData }
 
-class operator TwbSameData.Initialize(out Dest: TwbSameData);
+class operator TwbSameData.Initialize(var Dest: TwbSameData);
 begin
   Dest.DatasCount := 0;
 end;
@@ -987,7 +990,7 @@ end;
 procedure TwbCustomBSArchive.SetMultiThreaded(aValue: Boolean);
 begin
   fMultiThreaded := aValue;
-  {$IF CompilerVersion < 34.0}
+  {$IF 0}
   if fMultiThreaded and not Assigned(Sync) then
     Sync := TReadWriteSync.Create;
   {$IFEND}
@@ -1960,7 +1963,7 @@ begin
   end;
 end;
 
-{$WARN USE_BEFORE_DEF OFF} // suppress warning for DataHash
+//{$WARN USE_BEFORE_DEF OFF} // suppress warning for DataHash
 procedure TwbBSArchive.PackData(aFile: TwbBSFileEntry; aChunk: TwbBSFileChunk;
   aData: Pointer; aSize, aUncompressedSize: Integer);
 var
@@ -2034,7 +2037,7 @@ begin
     SyncEndWrite;
   end;
 end;
-{$WARN USE_BEFORE_DEF ON}
+//{$WARN USE_BEFORE_DEF ON}
 
 procedure TwbBSArchive.Pack(aFile: TwbBSFileEntry; aData: Pointer; aSize: Integer);
 var
@@ -2303,7 +2306,7 @@ begin
     FreeAndNil(fStream);
 
   if stWriting in fStates then try
-    System.SysUtils.DeleteFile(fFileName);
+    SysUtils.DeleteFile(fFileName);
   except end;
 
   fStates := [];

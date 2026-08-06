@@ -13,7 +13,7 @@ unit wbCommandLine;
 interface
 
 uses
-  System.SysUtils;
+  SysUtils;
 
 function wbFindCmdLineParam(const aSwitch     : string;
                             const aChars      : TSysCharSet;

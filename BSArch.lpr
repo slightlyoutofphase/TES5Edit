@@ -19,16 +19,16 @@ program BSArch;
 {$APPTYPE CONSOLE}
 
 uses
-  MSHeap,
+  CMem,
   {$IFDEF EXCEPTION_LOGGING_ENABLED}
   nxExceptionHook,
   {$ENDIF }
   System.Diagnostics,
-  System.Math,
-  System.SyncObjs,
-  System.SysUtils,
+  Math,
+  SyncObjs,
+  SysUtils,
   System.Threading,
-
+  LightweightMREW,
   wbBSArchive in 'Core\wbBSArchive.pas',
   wbCommandLine in 'Core\wbCommandLine.pas',
   wbCompression in 'Core\wbCompression.pas',
@@ -36,10 +36,10 @@ uses
   wbHash in 'Core\wbHash.pas',
   wbStreams in 'Core\wbStreams.pas';
 
-const
-  IMAGE_FILE_LARGE_ADDRESS_AWARE = $0020;
+//const
+//  IMAGE_FILE_LARGE_ADDRESS_AWARE = $0020;
 
-{$SetPEFlags IMAGE_FILE_LARGE_ADDRESS_AWARE}
+//{$SetPEFlags IMAGE_FILE_LARGE_ADDRESS_AWARE}
 
 type
   EInvalidArguments = class(Exception);
@@ -213,20 +213,19 @@ begin
 
     var sw := TStopwatch.StartNew;
     if bsa.MultiThreaded then
-      TParallel.&For(0, Pred(bsa.ProcessCount),
-        procedure(i: Integer; LoopState: TParallel.TLoopState)
-        begin
-          try
-            bsa.Process;
-            ShowProgress(bsa.ProcessCount);
-          except
-            on E: Exception do begin
-              SetError(E.Message);
-              LoopState.Stop;
-            end;
+      for parallel var i := 0 to Pred(bsa.ProcessCount) do
+      begin
+        try
+          bsa.Process;
+          ShowProgress(bsa.ProcessCount);
+        except
+          on E: Exception do begin
+            SetError(E.Message);
+            break;
           end;
-        end
-      )
+        end;
+      end
+
     else
       for var i := 0 to Pred(bsa.ProcessCount) do try
         bsa.Process;
@@ -314,8 +313,8 @@ begin
     end;
 
     if bsa.MultiThreaded then
-      TParallel.For(0, Pred(bsa.Count),
-        procedure(i: Integer; LoopState: TParallel.TLoopState)
+      for parallel var i := 0 to Pred(bsa.Count) do
+        //procedure(i: Integer; LoopState: TParallel.TLoopState)
         begin
           try
             bsa.Unpack(bsa[i].Name, folder + bsa[i].Name);
@@ -323,11 +322,11 @@ begin
           except
             on E: Exception do begin
               SetError(Format('Error processing "%s": %s', [bsa[i].Name, E.Message]));
-              LoopState.Stop;
+              break;
             end;
           end;
         end
-      )
+
     else
       for var i := 0 to Pred(bsa.Count) do try
         bsa.Unpack(bsa[i].Name, folder + bsa[i].Name);
@@ -631,5 +630,5 @@ begin
       System.ExitCode := 1;
     end;
   end;
-  if DebugHook <> 0 then ReadLn;
+  //if DebugHook <> 0 then ReadLn;
 end.

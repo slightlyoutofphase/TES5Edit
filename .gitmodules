@@ -46,3 +46,6 @@
 	path = External/lz4-delphi
 	url = https://github.com/ElminsterAU/lz4-delphi.git
 	branch = xedit-4.1.x
+[submodule "External/zflate"]
+	path = External/zflate
+	url = https://github.com/fibodevy/zflate

@@ -1,76 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="12"/>
+    <Version Value="13"/>
     <PathDelim Value="\"/>
     <General>
       <Flags>
         <MainUnitHasUsesSectionForAllUnits Value="False"/>
         <MainUnitHasCreateFormStatements Value="False"/>
         <MainUnitHasTitleStatement Value="False"/>
+        <MainUnitHasScaledStatement Value="False"/>
         <CompatibilityMode Value="True"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
       <Title Value="BSArch"/>
-      <Scaled Value="True"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
       <XPManifest>
         <DpiAware Value="True"/>
       </XPManifest>
-      <Icon Value="0"/>
     </General>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="1"/>
-      <MinorVersionNr Value="0"/>
-      <RevisionNr Value="0"/>
-      <BuildNr Value="0"/>
-      <StringTable FileDescription="BSArch" FileVersion="1.0.0.0" ProductName="BSArch" ProductVersion="1.0.0.0"/>
+      <StringTable FileDescription="BSArch" ProductName="BSArch" ProductVersion="1.0.0.0"/>
     </VersionInfo>
     <BuildModes Count="4">
-      <Item1 Name="Base" Default="True">
-        <CompilerOptions>
-          <Version Value="11"/>
-          <PathDelim Value="\"/>
-          <Target>
-            <Filename Value=".\Build\BSArch"/>
-          </Target>
-          <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir);.\External\libdeflate-pas;.\External\lz4-delphi;.\Core;.\BSArch"/>
-            <OtherUnitFiles Value=".\External\libdeflate-pas;.\External\lz4-delphi;.\Core;.\BSArch"/>
-            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
-          </SearchPaths>
-          <Parsing>
-            <SyntaxOptions>
-              <SyntaxMode Value="Delphi"/>
-            </SyntaxOptions>
-          </Parsing>
-          <CodeGeneration>
-            <SmartLinkUnit Value="True"/>
-            <TargetCPU Value="x86_64"/>
-            <TargetOS Value="win64"/>
-            <Optimizations>
-              <OptimizationLevel Value="3"/>
-            </Optimizations>
-          </CodeGeneration>
-          <Linking>
-            <Debugging>
-              <GenerateDebugInfo Value="True"/>
-              <UseLineInfoUnit Value="True"/>
-            </Debugging>
-            <LinkSmart Value="True"/>
-            <Options>
-              <Win32>
-                <GraphicApplication Value="False"/>
-              </Win32>
-            </Options>
-          </Linking>
-          <Other>
-            <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER"/>
-          </Other>
-        </CompilerOptions>
-      </Item1>
+      <Item1 Name="Base" Default="True"/>
       <Item2 Name="Release">
         <CompilerOptions>
           <Version Value="11"/>
@@ -79,8 +34,8 @@
             <Filename Value=".\Build\BSArch"/>
           </Target>
           <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir);.\External\libdeflate-pas;.\External\lz4-delphi;.\Core;.\BSArch"/>
-            <OtherUnitFiles Value=".\External\libdeflate-pas;.\External\lz4-delphi;.\Core;.\BSArch"/>
+            <IncludeFiles Value="$(ProjOutDir);External\libdeflate-pas;External\lz4-delphi;Core;BSArch"/>
+            <OtherUnitFiles Value="External\libdeflate-pas;External\lz4-delphi;Core;BSArch"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -98,16 +53,9 @@
           </CodeGeneration>
           <Linking>
             <Debugging>
-              <GenerateDebugInfo Value="True"/>
-              <UseLineInfoUnit Value="True"/>
               <StripSymbols Value="True"/>
             </Debugging>
             <LinkSmart Value="True"/>
-            <Options>
-              <Win32>
-                <GraphicApplication Value="False"/>
-              </Win32>
-            </Options>
           </Linking>
           <Other>
             <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER -dRELEASE"/>
@@ -122,35 +70,35 @@
             <Filename Value=".\Build\BSArch"/>
           </Target>
           <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir);.\External\libdeflate-pas;.\External\lz4-delphi;.\Core;.\BSArch"/>
-            <OtherUnitFiles Value=".\External\libdeflate-pas;.\External\lz4-delphi;.\Core;.\BSArch"/>
-            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+            <IncludeFiles Value="$(ProjOutDir);External\libdeflate-pas;External\lz4-delphi;Core;BSArch;External\zflate\src"/>
+            <OtherUnitFiles Value="External\libdeflate-pas;External\lz4-delphi;Core;BSArch;External\zflate\src;External\libdeflate-pas\static"/>
+            <UnitOutputDirectory Value="libdebug\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
+            <Style Value="1"/>
             <SyntaxOptions>
-              <SyntaxMode Value="Delphi"/>
+              <SyntaxMode Value="unleashed"/>
+              <IncludeAssertionCode Value="True"/>
             </SyntaxOptions>
           </Parsing>
           <CodeGeneration>
-            <SmartLinkUnit Value="True"/>
+            <Checks>
+              <IOChecks Value="True"/>
+              <RangeChecks Value="True"/>
+              <OverflowChecks Value="True"/>
+              <StackChecks Value="True"/>
+            </Checks>
+            <VerifyObjMethodCallValidity Value="True"/>
             <TargetCPU Value="x86_64"/>
             <TargetOS Value="win64"/>
             <Optimizations>
-              <OptimizationLevel Value="3"/>
+              <OptimizationLevel Value="0"/>
             </Optimizations>
           </CodeGeneration>
           <Linking>
             <Debugging>
-              <GenerateDebugInfo Value="True"/>
-              <UseLineInfoUnit Value="True"/>
-              <StripSymbols Value="True"/>
+              <DebugInfoType Value="dsDwarf3"/>
             </Debugging>
-            <LinkSmart Value="True"/>
-            <Options>
-              <Win32>
-                <GraphicApplication Value="False"/>
-              </Win32>
-            </Options>
           </Linking>
           <Other>
             <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER -dDEBUG"/>
@@ -165,8 +113,8 @@
             <Filename Value=".\Build\BSArch"/>
           </Target>
           <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir);.\External\libdeflate-pas;.\External\lz4-delphi;.\Core;.\BSArch"/>
-            <OtherUnitFiles Value=".\External\libdeflate-pas;.\External\lz4-delphi;.\Core;.\BSArch"/>
+            <IncludeFiles Value="$(ProjOutDir);External\libdeflate-pas;External\lz4-delphi;Core;BSArch"/>
+            <OtherUnitFiles Value="External\libdeflate-pas;External\lz4-delphi;Core;BSArch"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -183,16 +131,7 @@
             </Optimizations>
           </CodeGeneration>
           <Linking>
-            <Debugging>
-              <GenerateDebugInfo Value="True"/>
-              <UseLineInfoUnit Value="True"/>
-            </Debugging>
             <LinkSmart Value="True"/>
-            <Options>
-              <Win32>
-                <GraphicApplication Value="False"/>
-              </Win32>
-            </Options>
           </Linking>
           <Other>
             <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER"/>
@@ -200,6 +139,12 @@
         </CompilerOptions>
       </Item4>
     </BuildModes>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+    <RunParams>
+      <FormatVersion Value="2"/>
+    </RunParams>
     <RequiredPackages Count="1">
       <Item1>
         <PackageName Value="FCL"/>
@@ -213,32 +158,26 @@
       <Unit1>
         <Filename Value="Core\wbBSArchive.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="wbBSArchive"/>
       </Unit1>
       <Unit2>
         <Filename Value="Core\wbCommandLine.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="wbCommandLine"/>
       </Unit2>
       <Unit3>
         <Filename Value="Core\wbCompression.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="wbCompression"/>
       </Unit3>
       <Unit4>
         <Filename Value="Core\wbDDS.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="wbDDS"/>
       </Unit4>
       <Unit5>
         <Filename Value="Core\wbHash.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="wbHash"/>
       </Unit5>
       <Unit6>
         <Filename Value="Core\wbStreams.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="wbStreams"/>
       </Unit6>
     </Units>
   </ProjectOptions>
@@ -249,26 +188,20 @@
       <Filename Value=".\Build\BSArch"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir);.\External\libdeflate-pas;.\External\lz4-delphi;.\Core;.\BSArch"/>
-      <OtherUnitFiles Value=".\External\libdeflate-pas;.\External\lz4-delphi;.\Core;.\BSArch"/>
+      <IncludeFiles Value="$(ProjOutDir);External\libdeflate-pas;External\lz4-delphi;Core;BSArch;External\zflate\src"/>
+      <OtherUnitFiles Value="External\libdeflate-pas;External\lz4-delphi;Core;BSArch;External\zflate\src;External\libdeflate-pas\static"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>
+      <Style Value="1"/>
       <SyntaxOptions>
-        <SyntaxMode Value="Delphi"/>
+        <SyntaxMode Value="unleashed"/>
       </SyntaxOptions>
     </Parsing>
     <CodeGeneration>
       <TargetCPU Value="x86_64"/>
       <TargetOS Value="win64"/>
     </CodeGeneration>
-    <Linking>
-      <Options>
-        <Win32>
-          <GraphicApplication Value="False"/>
-        </Win32>
-      </Options>
-    </Linking>
     <Other>
       <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER"/>
     </Other>

@@ -13,7 +13,7 @@ unit wbHash;
 interface
 
 uses
-  System.SysUtils;
+  SysUtils;
 
 type
   TwbXXH32 = type Cardinal;
@@ -99,11 +99,11 @@ type
 implementation
 
 uses
-  System.Classes,
+  Classes,
 
-  WinApi.Windows,
+  Windows,
 
-  xxHash;
+  LZ4Mingw;
 
 function LastCharPos(const s: string; const Chr: char): Integer;
 begin
@@ -155,9 +155,9 @@ begin
   else
     if aIgnoreCase then begin
       var s := LowerCase(aText);
-      Result := LookupHash(@s[1], ByteLength(s));
+      Result := LookupHash(@s[1], Length(s));
     end else
-      Result := LookupHash(@aText[1], ByteLength(aText));
+      Result := LookupHash(@aText[1], Length(aText));
 end;
 
 class function TwbHash.SameLookupHash(aHash1, aHash2: TwbLookupHash): Boolean;
@@ -268,12 +268,12 @@ end;
 
 class function TwbHash.XXH32(aData: Pointer; aLen: NativeInt; aSeed: TwbXXH32 = 0): TwbXXH32;
 begin
-  Result := xxHash.{$IFDEF WIN64}XXH32{$ELSE}_XXH32{$ENDIF}(aData, aLen, aSeed);
+  Result := LZ4Mingw.{$IFDEF WIN64}XXH32{$ELSE}_XXH32{$ENDIF}(aData, aLen, aSeed);
 end;
 
 class function TwbHash.XXH64(aData: Pointer; aLen: NativeInt; aSeed: TwbXXH64 = 0): TwbXXH64;
 begin
-  Result := xxHash.{$IFDEF WIN64}XXH64{$ELSE}_XXH64{$ENDIF}(aData, aLen, aSeed);
+  Result := LZ4Mingw.{$IFDEF WIN64}XXH64{$ELSE}_XXH64{$ENDIF}(aData, aLen, aSeed);
 end;
 
 {class function TwbHash.XXH3(aData: Pointer; aLen: NativeInt): TwbXXH3;
@@ -431,7 +431,7 @@ end;
 
 class function TwbHash.CRC32(const aData: TBytes): TwbCRC32;
 begin
-  Result := CRC32(aData, Length(aData));
+  Result := CRC32(@aData, Length(aData));
 end;
 
 class function TwbHash.CRC32(const aFileName: string): TwbCRC32;
