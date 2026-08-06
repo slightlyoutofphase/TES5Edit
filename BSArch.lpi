@@ -40,7 +40,7 @@
           </SearchPaths>
           <Parsing>
             <SyntaxOptions>
-              <SyntaxMode Value="Delphi"/>
+              <SyntaxMode Value="unleashed"/>
             </SyntaxOptions>
           </Parsing>
           <CodeGeneration>
@@ -53,12 +53,15 @@
           </CodeGeneration>
           <Linking>
             <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <RunWithoutDebug Value="True"/>
+              <UseLineInfoUnit Value="False"/>
               <StripSymbols Value="True"/>
             </Debugging>
             <LinkSmart Value="True"/>
           </Linking>
           <Other>
-            <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER -dRELEASE"/>
+            <CustomOptions Value="-Ci- -Cr- -CR- -dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER -dRELEASE"/>
           </Other>
         </CompilerOptions>
       </Item2>

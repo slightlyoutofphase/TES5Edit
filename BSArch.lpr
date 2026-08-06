@@ -314,18 +314,17 @@ begin
 
     if bsa.MultiThreaded then
       for parallel var i := 0 to Pred(bsa.Count) do
-        //procedure(i: Integer; LoopState: TParallel.TLoopState)
-        begin
-          try
-            bsa.Unpack(bsa[i].Name, folder + bsa[i].Name);
-            ShowProgress(bsa.Count);
-          except
-            on E: Exception do begin
-              SetError(Format('Error processing "%s": %s', [bsa[i].Name, E.Message]));
-              break;
-            end;
+      begin
+        try
+          bsa.Unpack(bsa[i].Name, folder + bsa[i].Name);
+          ShowProgress(bsa.Count);
+        except
+          on E: Exception do begin
+            SetError(Format('Error processing "%s": %s', [bsa[i].Name, E.Message]));
+            break;
           end;
-        end
+        end;
+      end
 
     else
       for var i := 0 to Pred(bsa.Count) do try
