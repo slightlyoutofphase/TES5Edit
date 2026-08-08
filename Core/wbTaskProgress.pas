@@ -3,6 +3,7 @@
   v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
   one at https://mozilla.org/MPL/2.0/.
 *******************************************************************************}
+
 unit wbTaskProgress;
 
 {$mode Delphi}
@@ -15,16 +16,15 @@ uses
   SyncObjs,
   SysUtils,
   LMessages,
-  ComCtrls,
   Controls,
   ExtCtrls,
   Forms,
   StdCtrls,
-  LightweightMREW;
+  LightweightMREW, JvSpecialProgress;
 
 const
   LM_PROGRESS_UPDATE = LM_USER;
-  LM_PROGRESS_ERROR  = LM_USER + 1;
+  LM_PROGRESS_ERROR = LM_USER + 1;
 
 type
   TProc<T> = reference to procedure(Arg1: T);
@@ -33,19 +33,8 @@ type
 
   TProcessProc = TProc<Integer>;
 
-  TProgressBarWithText = class(TProgressBar)
-  private
-    FProgressText: string;
-    FProgressTextMult: Double;
-  protected
-    procedure WMPaint(var Msg: TLMPaint); message LM_PAINT;
-  public
-    property ProgressText: string read FProgressText write FProgressText;
-    property ProgressTextMult: Double read FProgressTextMult write FProgressTextMult;
-  end;
-
   TFormTaskProgress = class(TForm)
-    ProgressBar: TProgressBar;
+    JvSpecialProgress1: TJvSpecialProgress;
     btnCancel: TButton;
     pnlError: TPanel;
     Label1: TLabel;
@@ -60,13 +49,7 @@ type
     fHighIndex: Integer;
     fCurrentIndex: Integer;
     fProgressTextMult: Double;
-
-    {$IF 1} { Delphi 10.4 / LightweightMREW compatibility unit }
     fObjectLock: TLightweightMREW;
-    {$ELSE}
-    fObjectLock: IReadWriteSync;
-    {$IFEND}
-
     fProcessProc: TProcessProc;
     fThreadPool: array of TwbTaskWorkerThread;
     fThreads: Integer;
@@ -76,7 +59,6 @@ type
     fExceptionMessage: string;
     fHeight: Integer;
     fRunning: Boolean;
-
     procedure StartProcessing;
     procedure WMProgressUpdate(var msg: TLMessage); message LM_PROGRESS_UPDATE;
     procedure WMProgressError(var msg: TLMessage); message LM_PROGRESS_ERROR;
@@ -110,7 +92,6 @@ type
     HighIndex: Integer;
     ErrorIndex: Integer;
     ErrorMessage: string;
-
     constructor Create(aOwner: TComponent);
     function Execute: TModalResult;
   end;
@@ -137,39 +118,6 @@ var
 {$ENDIF}
 
 //============================================================================
-procedure TProgressBarWithText.WMPaint(var Msg: TLMPaint);
-var
-  DC: HDC;
-  prevfont: HGDIOBJ;
-  prevbkmode: Integer;
-  R: TRect;
-  s: string;
-begin
-  inherited;
-
-  {$IFDEF MSWINDOWS}
-  s := ProgressText;
-  if s = '' then
-    s := Format('%d/%d', [Round(Position * FProgressTextMult), Round(Max * FProgressTextMult)]);
-
-  R := ClientRect;
-  DC := GetWindowDC(Handle);
-  try
-    prevbkmode := SetBkMode(DC, TRANSPARENT);
-    prevfont := SelectObject(DC, Font.Handle);
-    DrawText(DC, PChar(s), Length(s), R, DT_SINGLELINE or DT_CENTER or DT_VCENTER);
-    SelectObject(DC, prevfont);
-    SetBkMode(DC, prevbkmode);
-  finally
-    ReleaseDC(Handle, DC);
-  end;
-  {$ELSE}
-  // Non-Windows: just let the normal LCL progress bar paint.
-  // (You can later overlay a TLabel if you want text on Linux/macOS.)
-  {$ENDIF}
-end;
-
-//============================================================================
 function CalcThreads(aCores: Integer): Integer;
 begin
   // leave one core for the system, we are generous :)
@@ -193,7 +141,6 @@ begin
   var Count := HighIndex - LowIndex + 1;
   if Count <= 0 then
     Exit;
-
   with TFormTaskProgress.Create(Owner) do
   try
     Caption := Self.Caption;
@@ -202,7 +149,6 @@ begin
     fProcessProc := Self.ProcessProc;
     fThreads := Self.Threads;
     fProgressTextMult := Self.ProgressTextMult;
-
     if fThreads = 0 then
     begin
       fThreads := CalcThreads(System.CPUCount);
@@ -211,7 +157,6 @@ begin
     end;
     if fThreads > Count then
       fThreads := Count;
-
     ShowModal;
     Result := TaskResult;
     Self.ErrorIndex := fExceptionIndex;
@@ -223,13 +168,12 @@ end;
 
 {$IFDEF MSWINDOWS}
 const
-  SID_ITaskbarList  = '{56FDF342-FD6D-11D0-958A-006097C9A090}';
+  SID_ITaskbarList = '{56FDF342-FD6D-11D0-958A-006097C9A090}';
   SID_ITaskbarList2 = '{602D4995-B13A-429B-A66E-1935E44F4317}';
   SID_ITaskbarList3 = '{EA1AFB91-9E28-4B86-90E9-9E9F8A5EEFAF}';
   SID_ITaskbarList4 = '{C43DC798-95D1-4BEA-9030-BB99E2983A1A}';
-
 const
-  IID_ITaskbarList:  TGUID = SID_ITaskbarList;
+  IID_ITaskbarList: TGUID = SID_ITaskbarList;
   IID_ITaskbarList2: TGUID = SID_ITaskbarList2;
   IID_ITaskbarList3: TGUID = SID_ITaskbarList3;
   IID_ITaskbarList4: TGUID = SID_ITaskbarList4;
@@ -244,13 +188,11 @@ begin
     Exit;
   if Assigned(TaskbarList) then
     Exit;
-
   try
     TaskbarList := CreateComObject(CLSID_TaskbarList) as ITaskbarList;
   except
     Exit;
   end;
-
   TaskbarList.HrInit;
   Supports(TaskbarList, IID_ITaskbarList2, TaskbarList2);
   Supports(TaskbarList, IID_ITaskbarList3, TaskbarList3);
@@ -322,13 +264,10 @@ begin
   finally
     fObjectLock.EndWrite;
   end;
-
   Result := False;
   if CurIndex = -1 then
     Exit;
-
   PostMessage(Handle, LM_PROGRESS_UPDATE, CurIndex, 0);
-
   try
     fProcessProc(CurIndex);
     Result := True;
@@ -352,7 +291,6 @@ end;
 
 //============================================================================
 procedure TFormTaskProgress.StartProcessing;
-  // returns the number of finished threads
   function GetFinishedThreads: Integer;
   begin
     Result := 0;
@@ -360,26 +298,16 @@ procedure TFormTaskProgress.StartProcessing;
       if t.Finished then
         Inc(Result);
   end;
-
 begin
   fRunning := True;
-
   // give time for the form to draw itself
   Sleep(100);
-
-  {$IF 0}
-  fObjectLock := TReadWriteSync.Create;
-  {$IFEND}
-
   fCurrentIndex := fLowIndex;
   fExceptionIndex := -1;
-
   SetLength(fThreadPool, fThreads);
-
   // create and start worker threads
   for var i := Low(fThreadPool) to High(fThreadPool) do
     fThreadPool[i] := TwbTaskWorkerThread.Create(ProcessNext);
-
   // poll threads until all have finished
   while GetFinishedThreads <> Length(fThreadPool) do
   begin
@@ -388,17 +316,13 @@ begin
       for var t in fThreadPool do
         if not t.Finished and not t.Terminated then
           t.Terminate;
-
     Sleep(200);
   end;
-
   // clear threads, all have finished by now
   for var t in fThreadPool do
     t.Free;
   SetLength(fThreadPool, 0);
-
   fRunning := False;
-
   if fExceptionIndex <> -1 then
   begin
     TaskResult := mrAbort;
@@ -412,8 +336,6 @@ begin
       TaskResult := mrCancel
     else
       TaskResult := mrOk;
-
-    // close window
     PostMessage(Handle, WM_CLOSE, 0, 0);
   end;
 end;
@@ -421,16 +343,19 @@ end;
 //============================================================================
 procedure TFormTaskProgress.WMProgressUpdate(var msg: TLMessage);
 begin
-  ProgressBar.Position := msg.WParam;
+  JvSpecialProgress1.Position := msg.WParam;
+  JvSpecialProgress1.Caption := Format('%d/%d',
+    [Round(msg.WParam * fProgressTextMult),
+     Round(JvSpecialProgress1.Maximum * fProgressTextMult)]);
   {$IFDEF MSWINDOWS}
-  TaskbarShowProgress(Application.MainFormHandle, ProgressBar.Position, ProgressBar.Max);
+  TaskbarShowProgress(Application.MainFormHandle, JvSpecialProgress1.Position, JvSpecialProgress1.Maximum);
   {$ENDIF}
 end;
 
 //============================================================================
 procedure TFormTaskProgress.WMProgressError(var msg: TLMessage);
 begin
-  ProgressBar.Position := fExceptionIndex;
+  JvSpecialProgress1.Position := fExceptionIndex;
   {$IFDEF MSWINDOWS}
   TaskbarErrorProgress(Application.MainFormHandle);
   {$ENDIF}
@@ -460,7 +385,6 @@ begin
     Action := caNone;
     Exit;
   end;
-
   {$IFDEF MSWINDOWS}
   TaskbarHideProgress(Application.MainFormHandle);
   {$ENDIF}
@@ -468,39 +392,23 @@ end;
 
 //============================================================================
 procedure TFormTaskProgress.FormCreate(Sender: TObject);
-var
-  pg: TProgressBarWithText;
 begin
   Font.Size := Screen.MenuFont.Size;
-
   fHeight := Height;
   Height := Height - pnlError.Top + 2;
-
-  // replace the designer progress bar with our text-capable version
-  pg := TProgressBarWithText.Create(Self);
-  pg.Parent := ProgressBar.Parent;
-  pg.Left := ProgressBar.Left;
-  pg.Top := ProgressBar.Top;
-  pg.Width := ProgressBar.Width;
-  pg.Height := ProgressBar.Height;
-  pg.Smooth := ProgressBar.Smooth;
-  pg.Anchors := ProgressBar.Anchors;
-
-  ProgressBar.Free;
-  ProgressBar := pg;
 end;
 
 //============================================================================
 procedure TFormTaskProgress.FormActivate(Sender: TObject);
 begin
   InitializeTaskbars;
-
-  ProgressBar.Min := fLowIndex;
-  ProgressBar.Max := fHighIndex;
-
-  if ProgressBar is TProgressBarWithText then
-    TProgressBarWithText(ProgressBar).ProgressTextMult := fProgressTextMult;
-
+  JvSpecialProgress1.Minimum := fLowIndex;
+  JvSpecialProgress1.Maximum := fHighIndex;
+  JvSpecialProgress1.TextOption := toCaption;
+  JvSpecialProgress1.TextCentered := True;
+  JvSpecialProgress1.Caption := Format('%d/%d',
+    [Round(fLowIndex * fProgressTextMult),
+     Round(fHighIndex * fProgressTextMult)]);
   // start the real work on a background thread so the form can paint
   TThread.CreateAnonymousThread(StartProcessing).Start;
 end;
