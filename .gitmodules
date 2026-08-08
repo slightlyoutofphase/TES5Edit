@@ -24,8 +24,8 @@
 	branch = xEdit-4.1.x
 [submodule "JsonDataObjects"]
 	path = External/JsonDataObjects
-	url = https://github.com/ElminsterAU/JsonDataObjects.git
-	branch = xEdit-4.1.x
+	url = https://github.com/slightlyoutofphase/JsonDataObjects.git
+	branch = master
 [submodule "imaginglib"]
 	path = External/ImagingLib
 	url = https://github.com/ElminsterAU/imaginglib.git
@@ -45,7 +45,7 @@
 [submodule "External/lz4-delphi"]
 	path = External/lz4-delphi
 	url = https://github.com/slightlyoutofphase/lz4-delphi.git
-	branch = xedit-4.1.x
+	branch = FreePascal
 [submodule "External/zflate"]
 	path = External/zflate
 	url = https://github.com/fibodevy/zflate
