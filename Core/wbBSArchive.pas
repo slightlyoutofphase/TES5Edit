@@ -119,12 +119,12 @@ type
   end;
   TwbBSFileEntries = array of TwbBSFileEntry;
 
-  TwbBSArchiveEnumerator = class
+  TwbBSArchiveEnumerator = record
   private
     fIndex: NativeInt;
     fArchive: TwbBSArchive;
   public
-    constructor Create(aArchive: TwbBSArchive);
+    class function Create(aArchive: TwbBSArchive): TwbBSArchiveEnumerator; static; inline;
     function GetCurrent: TwbBSFileEntry; inline;
     function MoveNext: Boolean; inline;
     property Current: TwbBSFileEntry read GetCurrent;
@@ -1126,14 +1126,14 @@ begin
     end;
 end;
 
-
 { TwbBSArchiveEnumerator }
 
-constructor TwbBSArchiveEnumerator.Create(aArchive: TwbBSArchive);
+class function TwbBSArchiveEnumerator.Create(aArchive: TwbBSArchive): TwbBSArchiveEnumerator;
 begin
-  inherited Create;
-  fIndex := -1;
-  fArchive := aArchive;
+  with Result do begin
+    fIndex := -1;
+    fArchive := aArchive;
+  end;
 end;
 
 function TwbBSArchiveEnumerator.GetCurrent: TwbBSFileEntry;

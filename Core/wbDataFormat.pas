@@ -9,13 +9,15 @@
 unit wbDataFormat;
 
 //{$DEFINE DFDEBUG}
+{$mode Delphi}
+{$modeswitch inlinevars}
 
 interface
 
 uses
-  System.Classes,
-  System.SysUtils,
-
+  Classes,
+  SysUtils,
+  BufStream,
   JsonDataObjects;
 
 type
@@ -188,12 +190,12 @@ type
 
   TdfContainer = class;
 
-  TdfElementEnumerator = class
+  TdfElementEnumerator = record
   private
     fIndex: Integer;
     fContainer: TdfContainer;
   public
-    constructor Create(aElement: TdfElement);
+    class function Create(aElement: TdfElement): TdfElementEnumerator; static; inline;
     function GetCurrent: TdfElement; inline;
     function MoveNext: Boolean; inline;
     property Current: TdfElement read GetCurrent;
@@ -261,7 +263,7 @@ type
     procedure Delete(Index: Integer); virtual;
     procedure Remove; virtual;
     procedure Move(CurIndex, NewIndex: Integer); virtual;
-    function Sort(aCompare: TListSortCompareFunc): Boolean; virtual;
+    function Sort(aCompare: TListSortCompare): Boolean; virtual;
     procedure Remap(const aMap: array of Cardinal); virtual;
     function Index: Integer; virtual;
     function IndexOf(aElement: TdfElement): Integer; virtual;
@@ -334,7 +336,7 @@ type
     function DataSize: integer; override;
     procedure Delete(Index: Integer); override;
     procedure Move(CurIndex, NewIndex: Integer); override;
-    function Sort(aCompare: TListSortCompareFunc): Boolean; override;
+    function Sort(aCompare: TListSortCompare): Boolean; override;
     procedure Remap(const aMap: array of Cardinal); override;
     function IndexOf(aElement: TdfElement): integer; override;
     function ElementByName(const aName: string; aEnabledOnly: Boolean = True): TdfElement; override;
@@ -723,11 +725,10 @@ function dfChars(
 implementation
 
 uses
-  System.Math,
-  System.StrUtils,
-  System.Variants,
+  Math,
+  StrUtils,
+  Variants,
 
-  Winapi.Windows,
 
   wbHalfFloat;
 
@@ -1086,11 +1087,12 @@ end;
 
 { TdfElementEnumerator }
 
-constructor TdfElementEnumerator.Create(aElement: TdfElement);
+class function TdfElementEnumerator.Create(aElement: TdfElement): TdfElementEnumerator;
 begin
-  inherited Create;
-  fIndex := -1;
-  fContainer := TdfContainer(aElement);
+  with Result do begin
+    fIndex := -1;
+    fContainer := TdfContainer(aElement);
+  end;
 end;
 
 function TdfElementEnumerator.GetCurrent: TdfElement;
@@ -1181,73 +1183,17 @@ end;
 
 procedure TdfElement.LoadFromFile(const aFileName: string);
 var
-  //Buffer: TBytes;
+  Buffer: TBytes;
   flFileHandle, flMapHandle: THandle;
   DataStart, DataEnd: PByte;
 begin
-  {
-  with TFileStream.Create(aFileName, fmOpenRead or fmShareDenyNone) do try
+  with TBufferedFileStream.Create(aFileName, fmOpenRead or fmShareDenyNone) do try
     SetLength(Buffer, Size);
     ReadBuffer(Buffer, Length(Buffer));
   finally
     Free;
   end;
   LoadFromData(Buffer);
-  }
-  DataStart := nil;
-  flFileHandle := INVALID_HANDLE_VALUE;
-  flMapHandle := INVALID_HANDLE_VALUE;
-
-  try
-    flFileHandle := CreateFile(
-      PChar(aFileName),
-      GENERIC_READ,
-      FILE_SHARE_READ,
-      nil,
-      OPEN_EXISTING,
-      FILE_FLAG_SEQUENTIAL_SCAN, //FILE_FLAG_RANDOM_ACCESS,
-      0
-    );
-    if (flFileHandle = INVALID_HANDLE_VALUE) or (flFileHandle = 0) then
-      RaiseLastOSError;
-
-    flMapHandle := CreateFileMapping(
-      flFileHandle,
-      nil,
-      PAGE_READONLY,
-      0,
-      0,
-      nil
-    );
-    if (flMapHandle = INVALID_HANDLE_VALUE) or (flMapHandle = 0) then
-      RaiseLastOSError;
-
-    DataStart := MapViewOfFileEx(
-      flMapHandle,
-      FILE_MAP_READ,
-      0,
-      0,
-      0,
-      nil
-    );
-
-    if not Assigned(DataStart) then
-      RaiseLastOSError;
-
-    DataEnd := DataStart + GetFileSize(flFileHandle, nil);
-
-    Unserialize(DataStart, DataEnd, 0);
-
-  finally
-    if Assigned(DataStart) then
-      UnmapViewOfFile(DataStart);
-
-    if (flMapHandle <> INVALID_HANDLE_VALUE) and (flMapHandle <> 0) then
-      CloseHandle(flMapHandle);
-
-    if (flFileHandle <> INVALID_HANDLE_VALUE) and (flFileHandle <> 0) then
-      CloseHandle(flFileHandle);
-  end;
 end;
 
 procedure TdfElement.LoadFromJSONFile(const aFileName: string);
@@ -1432,7 +1378,7 @@ begin
   DoException('Can not reorder in this element');
 end;
 
-function TdfElement.Sort(aCompare: TListSortCompareFunc): Boolean;
+function TdfElement.Sort(aCompare: TListSortCompare): Boolean;
 begin
   Result := False;
   DoException('Can not sort in this element');
@@ -2022,7 +1968,7 @@ begin
   FElements[NewIndex] := Element;
 end;
 
-function TdfContainer.Sort(aCompare: TListSortCompareFunc): Boolean;
+function TdfContainer.Sort(aCompare: TListSortCompare): Boolean;
 
   function QuickSort(SortList: TdfElements; L, R: Integer): Boolean;
   var

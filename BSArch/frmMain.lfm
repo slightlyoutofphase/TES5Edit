@@ -1,57 +1,58 @@
 object FormMain: TFormMain
-  Left = 0
-  Top = 0
+  Left = 498
+  Height = 561
+  Top = 283
+  Width = 1024
+  AllowDropFiles = True
   Caption = 'BSArchPro'
-  ClientHeight = 561
-  ClientWidth = 1024
+  ClientHeight = 0
+  ClientWidth = 0
   Color = clWindow
-  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
-  Font.Style = []
+  FormStyle = fsStayOnTop
   Position = poDefault
+  LCLVersion = '4.99.0.0'
+  Visible = True
   OnClose = FormClose
   OnCreate = FormCreate
-  TextHeight = 13
+  OnDropFiles = FormDropFiles
   object pnlFilter: TPanel
     Left = 0
+    Height = 41
     Top = 0
     Width = 1024
-    Height = 41
     Align = alTop
-    BevelEdges = [beBottom]
-    BevelKind = bkTile
     BevelOuter = bvNone
+    ClientHeight = 41
+    ClientWidth = 1024
+    ParentBackground = False
     TabOrder = 0
-    DesignSize = (
-      1024
-      39)
     object lblAssets: TLabel
       Left = 636
+      Height = 13
       Top = 13
       Width = 38
-      Height = 13
       Caption = '0/0 files'
     end
     object edFilter: TLabeledEdit
       Left = 40
+      Height = 21
       Top = 10
       Width = 329
-      Height = 21
-      EditLabel.Width = 24
       EditLabel.Height = 21
+      EditLabel.Width = 24
       EditLabel.Caption = 'Filter'
       LabelPosition = lpLeft
       TabOrder = 0
-      Text = ''
       OnKeyPress = edFilterKeyPress
     end
     object rbAll: TRadioButton
       Left = 385
-      Top = 12
-      Width = 41
       Height = 17
+      Top = 12
+      Width = 29
       Caption = 'All'
       Checked = True
       TabOrder = 1
@@ -60,36 +61,36 @@ object FormMain: TFormMain
     end
     object rbCompressed: TRadioButton
       Left = 432
-      Top = 12
-      Width = 88
       Height = 17
+      Top = 12
+      Width = 77
       Caption = 'Compressed'
       TabOrder = 2
       OnClick = rbAllClick
     end
     object rbUncompressed: TRadioButton
       Left = 526
-      Top = 12
-      Width = 90
       Height = 17
+      Top = 12
+      Width = 88
       Caption = 'Uncompressed'
       TabOrder = 3
       OnClick = rbAllClick
     end
     object btnFilterReset: TButton
       Left = 765
+      Height = 24
       Top = 7
       Width = 108
-      Height = 24
       Caption = 'Show All'
       TabOrder = 4
       OnClick = btnFilterResetClick
     end
     object btnClearList: TButton
       Left = 907
+      Height = 25
       Top = 7
       Width = 108
-      Height = 25
       Anchors = [akTop, akRight]
       Caption = 'Clear List'
       TabOrder = 5
@@ -98,22 +99,20 @@ object FormMain: TFormMain
   end
   object Panel1: TPanel
     Left = 0
+    Height = 49
     Top = 512
     Width = 1024
-    Height = 49
     Align = alBottom
-    BevelEdges = [beTop]
-    BevelKind = bkTile
     BevelOuter = bvNone
+    ClientHeight = 49
+    ClientWidth = 1024
+    ParentBackground = False
     TabOrder = 1
-    DesignSize = (
-      1024
-      47)
     object btnPack: TButton
       Left = 785
+      Height = 27
       Top = 10
       Width = 108
-      Height = 27
       Anchors = [akTop, akRight]
       Caption = 'Pack'
       TabOrder = 0
@@ -121,9 +120,9 @@ object FormMain: TFormMain
     end
     object btnExit: TButton
       Left = 907
+      Height = 27
       Top = 10
       Width = 108
-      Height = 27
       Anchors = [akTop, akRight]
       Caption = 'Exit'
       TabOrder = 1
@@ -132,40 +131,54 @@ object FormMain: TFormMain
   end
   object pnlTip: TPanel
     Left = 0
+    Height = 64
     Top = 448
     Width = 1024
-    Height = 64
     Align = alBottom
     BevelOuter = bvNone
-    ParentColor = True
-    ShowCaption = False
+    ClientHeight = 64
+    ClientWidth = 1024
+    ParentBackground = False
     TabOrder = 2
     object lblTip: TLabel
       Left = 0
+      Height = 64
       Top = 0
       Width = 1024
-      Height = 64
       Align = alClient
       Alignment = taCenter
       AutoSize = False
       Caption = 'Tip'
+      Layout = tlCenter
       PopupMenu = mnAssets
       ShowAccelChar = False
-      Layout = tlCenter
     end
   end
-  object vtAssets: TVirtualStringTree
+  object vtAssets: TLazVirtualStringTree
     Left = 0
+    Height = 407
     Top = 41
     Width = 1024
-    Height = 407
     Align = alClient
-    BevelInner = bvLowered
-    BevelOuter = bvRaised
     BorderStyle = bsNone
     Colors.SelectionTextColor = clWindowText
     DefaultNodeHeight = 17
     Header.AutoSizeIndex = 1
+    Header.Columns = <    
+      item
+        MinWidth = 50
+        Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus, coEditable]
+        Position = 0
+        Text = '[Compressed] Asset Name'
+        Width = 400
+      end    
+      item
+        MinWidth = 50
+        Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus, coEditable]
+        Position = 1
+        Text = 'Source File'
+        Width = 624
+      end>
     Header.Height = 17
     Header.Options = [hoAutoResize, hoColumnResize, hoHotTrack, hoShowImages, hoShowSortGlyphs, hoVisible]
     IncrementalSearch = isAll
@@ -187,23 +200,6 @@ object FormMain: TFormMain
     OnHeaderClick = vtAssetsHeaderClick
     OnInitNode = vtAssetsInitNode
     OnKeyDown = vtAssetsKeyDown
-    Touch.InteractiveGestures = [igPan, igPressAndTap]
-    Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
-    Columns = <
-      item
-        MinWidth = 50
-        Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus, coEditable, coStyleColor]
-        Position = 0
-        Text = '[Compressed] Asset Name'
-        Width = 400
-      end
-      item
-        MinWidth = 50
-        Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus, coEditable, coStyleColor]
-        Position = 1
-        Text = 'Source File'
-        Width = 624
-      end>
   end
   object mnAssets: TPopupMenu
     OnPopup = mnAssetsPopup
@@ -276,16 +272,16 @@ object FormMain: TFormMain
     end
   end
   object dlgSameAsset: TTaskDialog
-    Buttons = <
+    Buttons = <    
       item
         Caption = 'Replace All'
         Default = True
         ModalResult = 100
-      end
+      end    
       item
         Caption = 'Skip All'
         ModalResult = 101
-      end
+      end    
       item
         Caption = 'Add All'
         ModalResult = 102
@@ -293,25 +289,26 @@ object FormMain: TFormMain
     CommonButtons = [tcbCancel]
     Flags = [tfUseHiconMain, tfAllowDialogCancellation, tfUseCommandLinksNoIcon, tfExpandedByDefault, tfPositionRelativeToWindow, tfSizeToContent]
     RadioButtons = <>
+    QueryItemIndex = 0
     Text = 'Text Matching Asset'
     Left = 384
     Top = 264
   end
   object dlgPackingCheck: TTaskDialog
-    Buttons = <
+    Buttons = <    
       item
         Caption = 'Show All'
         ModalResult = 100
-      end
+      end    
       item
         Caption = 'Continue'
-        Enabled = False
         ModalResult = 101
       end>
     CommonButtons = [tcbCancel]
     DefaultButton = tcbCancel
     Flags = [tfUseHiconMain, tfAllowDialogCancellation, tfPositionRelativeToWindow, tfSizeToContent]
     RadioButtons = <>
+    QueryItemIndex = 0
     Left = 384
     Top = 320
   end
@@ -322,19 +319,17 @@ object FormMain: TFormMain
     Top = 120
   end
   object dlgIdenticalFiles: TTaskDialog
-    Buttons = <
+    Buttons = <    
       item
         Caption = 'Group Identical'
-        CommandLinkHint = 
-          'Reorder list to group identical files and increase their chance ' +
-          'to end up in the same archive'
+        CommandLinkHint = 'Reorder list to group identical files and increase their chance to end up in the same archive'
         ModalResult = 100
-      end
+      end    
       item
         Caption = 'Filter By Identical'
         CommandLinkHint = 'Show identical assets in the list'
         ModalResult = 101
-      end
+      end    
       item
         Caption = 'Show Identical Assets'
         CommandLinkHint = 'Preview in separate window as text'
@@ -342,11 +337,10 @@ object FormMain: TFormMain
       end>
     Caption = 'Identical Assets'
     CommonButtons = [tcbCancel]
-    ExpandedText = 
-      'Group Identical files before packing and check Shared Data optio' +
-      'n to take advantage of packing same files together'
+    ExpandedText = 'Group Identical files before packing and check Shared Data option to take advantage of packing same files together'
     Flags = [tfUseHiconMain, tfAllowDialogCancellation, tfUseCommandLinks, tfExpandedByDefault, tfPositionRelativeToWindow, tfSizeToContent]
     RadioButtons = <>
+    QueryItemIndex = 0
     Left = 384
     Top = 376
   end

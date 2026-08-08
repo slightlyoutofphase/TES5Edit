@@ -8,15 +8,18 @@
 
 unit frmPack;
 
+{$mode Delphi}
+{$modeswitch Inlinevars}
+
 interface
 
 uses
-  System.Classes,
+  Classes,
 
-  Vcl.Controls,
-  Vcl.ExtCtrls,
-  Vcl.Forms,
-  Vcl.StdCtrls,
+  Controls,
+  ExtCtrls,
+  Forms,
+  StdCtrls,
 
   wbBSArchive;
 
@@ -77,12 +80,12 @@ implementation
 
 uses
   System.IOUtils,
-  System.SysUtils,
+  SysUtils,
 
-  Vcl.Dialogs,
-  Vcl.Graphics,
+  Dialogs,
+  Graphics,
 
-  Winapi.Windows,
+  Windows,
 
   wbCompression;
 
@@ -97,13 +100,13 @@ end;
 //============================================================================
 procedure TFormPack.btnBrowseClick(Sender: TObject);
 begin
-  with TFileSaveDialog.Create(Self) do try
-    with FileTypes.Add do begin
-      FileMask := '*' + TwbBSArchive.DefaultExtension(ArchiveType);
-      DisplayName := 'Bethesda Archive (' + FileMask + ')';
-    end;
+  with TSaveDialog.Create(Self) do try
+    //with FileTypes.Add do begin
+    //  FileMask := '*' + TwbBSArchive.DefaultExtension(ArchiveType);
+    //  DisplayName := 'Bethesda Archive (' + FileMask + ')';
+    //end;
 
-    DefaultFolder := ExtractFilePath(edFileName.Text);
+    InitialDir := ExtractFilePath(edFileName.Text);
     FileName := ExtractFileName(edFileName.Text);
     if Execute then begin
       var f := FileName;

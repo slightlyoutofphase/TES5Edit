@@ -1,76 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="12"/>
+    <Version Value="13"/>
     <PathDelim Value="\"/>
     <General>
       <Flags>
         <MainUnitHasUsesSectionForAllUnits Value="False"/>
         <MainUnitHasCreateFormStatements Value="False"/>
         <MainUnitHasTitleStatement Value="False"/>
+        <MainUnitHasScaledStatement Value="False"/>
         <CompatibilityMode Value="True"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
       <Title Value="BSArchPro"/>
-      <Scaled Value="True"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
       <XPManifest>
         <DpiAware Value="True"/>
       </XPManifest>
-      <Icon Value="0"/>
     </General>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="1"/>
-      <MinorVersionNr Value="0"/>
-      <RevisionNr Value="0"/>
-      <BuildNr Value="0"/>
-      <StringTable CompanyName="" FileDescription="$(MSBuildProjectName)" FileVersion="1.0.0.0" InternalName="" LegalCopyright="" LegalTrademarks="" OriginalFilename="" ProgramID="com.embarcadero.$(MSBuildProjectName)" ProductName="$(MSBuildProjectName)" ProductVersion="1.0.0.0" Comments=""/>
+      <StringTable ProductVersion="1.0.0.0"/>
     </VersionInfo>
     <BuildModes Count="4">
-      <Item1 Name="Base" Default="True">
-        <CompilerOptions>
-          <Version Value="11"/>
-          <PathDelim Value="\"/>
-          <Target>
-            <Filename Value=".\Build\BSArchPro"/>
-          </Target>
-          <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir);.\Core;.\BSArch;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\FileContainer;.\External\JsonDataObjects\Source;.\External\VirtualTrees\Source;.\External\vcl-styles-utils\Common;.\External\delphi-detours-library\Source"/>
-            <OtherUnitFiles Value=".\Core;.\BSArch;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\FileContainer;.\External\JsonDataObjects\Source;.\External\VirtualTrees\Source;.\External\vcl-styles-utils\Common;.\External\delphi-detours-library\Source"/>
-            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
-          </SearchPaths>
-          <Parsing>
-            <SyntaxOptions>
-              <SyntaxMode Value="Delphi"/>
-            </SyntaxOptions>
-          </Parsing>
-          <CodeGeneration>
-            <SmartLinkUnit Value="True"/>
-            <TargetCPU Value="x86_64"/>
-            <TargetOS Value="win64"/>
-            <Optimizations>
-              <OptimizationLevel Value="3"/>
-            </Optimizations>
-          </CodeGeneration>
-          <Linking>
-            <Debugging>
-              <GenerateDebugInfo Value="True"/>
-              <UseLineInfoUnit Value="True"/>
-            </Debugging>
-            <LinkSmart Value="True"/>
-            <Options>
-              <Win32>
-                <GraphicApplication Value="True"/>
-              </Win32>
-            </Options>
-          </Linking>
-          <Other>
-            <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER"/>
-          </Other>
-        </CompilerOptions>
-      </Item1>
+      <Item1 Name="Base" Default="True"/>
       <Item2 Name="Debug">
         <CompilerOptions>
           <Version Value="11"/>
@@ -79,17 +34,24 @@
             <Filename Value=".\Build\BSArchPro"/>
           </Target>
           <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir);.\Core;.\BSArch;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\FileContainer;.\External\JsonDataObjects\Source;.\External\VirtualTrees\Source;.\External\vcl-styles-utils\Common;.\External\delphi-detours-library\Source"/>
-            <OtherUnitFiles Value=".\Core;.\BSArch;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\FileContainer;.\External\JsonDataObjects\Source;.\External\VirtualTrees\Source;.\External\vcl-styles-utils\Common;.\External\delphi-detours-library\Source"/>
-            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+            <IncludeFiles Value="$(ProjOutDir);Core;BSArch;External\ImagingLib\Source;External\ImagingLib\Source\zlib;External\libdeflate-pas;External\lz4-delphi;External\FileContainer;External\JsonDataObjects\Source;External\vcl-styles-utils\Common;External\delphi-detours-library\Source"/>
+            <OtherUnitFiles Value="Core;BSArch;External\ImagingLib\Source;External\ImagingLib\Source\zlib;External\libdeflate-pas;External\lz4-delphi;External\FileContainer;External\JsonDataObjects\Source;External\vcl-styles-utils\Common;External\delphi-detours-library\Source;External\libdeflate-pas\static;External\zflate\src"/>
+            <UnitOutputDirectory Value="libdebug\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
             <SyntaxOptions>
-              <SyntaxMode Value="Delphi"/>
+              <SyntaxMode Value="unleashed"/>
+              <IncludeAssertionCode Value="True"/>
             </SyntaxOptions>
           </Parsing>
           <CodeGeneration>
-            <SmartLinkUnit Value="True"/>
+            <Checks>
+              <IOChecks Value="True"/>
+              <RangeChecks Value="True"/>
+              <OverflowChecks Value="True"/>
+              <StackChecks Value="True"/>
+            </Checks>
+            <VerifyObjMethodCallValidity Value="True"/>
             <TargetCPU Value="x86_64"/>
             <TargetOS Value="win64"/>
             <Optimizations>
@@ -98,10 +60,8 @@
           </CodeGeneration>
           <Linking>
             <Debugging>
-              <GenerateDebugInfo Value="True"/>
-              <UseLineInfoUnit Value="True"/>
+              <DebugInfoType Value="dsDwarf3"/>
             </Debugging>
-            <LinkSmart Value="True"/>
             <Options>
               <Win32>
                 <GraphicApplication Value="True"/>
@@ -121,13 +81,13 @@
             <Filename Value=".\Build\BSArchPro"/>
           </Target>
           <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir);.\Core;.\BSArch;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\FileContainer;.\External\JsonDataObjects\Source;.\External\VirtualTrees\Source;.\External\vcl-styles-utils\Common;.\External\delphi-detours-library\Source"/>
-            <OtherUnitFiles Value=".\Core;.\BSArch;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\FileContainer;.\External\JsonDataObjects\Source;.\External\VirtualTrees\Source;.\External\vcl-styles-utils\Common;.\External\delphi-detours-library\Source"/>
+            <IncludeFiles Value="$(ProjOutDir);Core;BSArch;External\ImagingLib\Source;External\ImagingLib\Source\zlib;External\libdeflate-pas;External\lz4-delphi;External\FileContainer;External\JsonDataObjects\Source;External\VirtualTrees\Source;External\vcl-styles-utils\Common;External\delphi-detours-library\Source"/>
+            <OtherUnitFiles Value="Core;BSArch;External\ImagingLib\Source;External\ImagingLib\Source\zlib;External\libdeflate-pas;External\lz4-delphi;External\FileContainer;External\JsonDataObjects\Source;External\vcl-styles-utils\Common;External\delphi-detours-library\Source;External\libdeflate-pas\static;External\zflate\src"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
             <SyntaxOptions>
-              <SyntaxMode Value="Delphi"/>
+              <SyntaxMode Value="unleashed"/>
             </SyntaxOptions>
           </Parsing>
           <CodeGeneration>
@@ -135,7 +95,7 @@
             <TargetCPU Value="x86_64"/>
             <TargetOS Value="win64"/>
             <Optimizations>
-              <OptimizationLevel Value="3"/>
+              <OptimizationLevel Value="4"/>
             </Optimizations>
           </CodeGeneration>
           <Linking>
@@ -152,7 +112,7 @@
             </Options>
           </Linking>
           <Other>
-            <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER -dRELEASE"/>
+            <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER -dRELEASE -Ci- -Cr- -g-"/>
           </Other>
         </CompilerOptions>
       </Item3>
@@ -164,8 +124,8 @@
             <Filename Value=".\Build\BSArchPro"/>
           </Target>
           <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir);.\Core;.\BSArch;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\FileContainer;.\External\JsonDataObjects\Source;.\External\VirtualTrees\Source;.\External\vcl-styles-utils\Common;.\External\delphi-detours-library\Source"/>
-            <OtherUnitFiles Value=".\Core;.\BSArch;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\FileContainer;.\External\JsonDataObjects\Source;.\External\VirtualTrees\Source;.\External\vcl-styles-utils\Common;.\External\delphi-detours-library\Source"/>
+            <IncludeFiles Value="$(ProjOutDir);Core;BSArch;External\ImagingLib\Source;External\ImagingLib\Source\zlib;External\libdeflate-pas;External\lz4-delphi;External\FileContainer;External\JsonDataObjects\Source;External\VirtualTrees\Source;External\vcl-styles-utils\Common;External\delphi-detours-library\Source"/>
+            <OtherUnitFiles Value="Core;BSArch;External\ImagingLib\Source;External\ImagingLib\Source\zlib;External\libdeflate-pas;External\lz4-delphi;External\FileContainer;External\JsonDataObjects\Source;External\VirtualTrees\Source;External\vcl-styles-utils\Common;External\delphi-detours-library\Source"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -182,10 +142,6 @@
             </Optimizations>
           </CodeGeneration>
           <Linking>
-            <Debugging>
-              <GenerateDebugInfo Value="True"/>
-              <UseLineInfoUnit Value="True"/>
-            </Debugging>
             <LinkSmart Value="True"/>
             <Options>
               <Win32>
@@ -199,13 +155,22 @@
         </CompilerOptions>
       </Item4>
     </BuildModes>
-    <RequiredPackages Count="2">
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+    <RunParams>
+      <FormatVersion Value="2"/>
+    </RunParams>
+    <RequiredPackages Count="3">
       <Item1>
-        <PackageName Value="LCL"/>
+        <PackageName Value="laz.virtualtreeview_package"/>
       </Item1>
       <Item2>
-        <PackageName Value="FCL"/>
+        <PackageName Value="LCL"/>
       </Item2>
+      <Item3>
+        <PackageName Value="FCL"/>
+      </Item3>
     </RequiredPackages>
     <Units Count="11">
       <Unit0>
@@ -215,27 +180,22 @@
       <Unit1>
         <Filename Value="Core\wbBSArchive.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="wbBSArchive"/>
       </Unit1>
       <Unit2>
         <Filename Value="Core\wbCompression.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="wbCompression"/>
       </Unit2>
       <Unit3>
         <Filename Value="Core\wbDDS.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="wbDDS"/>
       </Unit3>
       <Unit4>
         <Filename Value="Core\wbHash.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="wbHash"/>
       </Unit4>
       <Unit5>
         <Filename Value="Core\wbStreams.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="wbStreams"/>
       </Unit5>
       <Unit6>
         <Filename Value="Core\wbTaskProgress.pas"/>
@@ -243,7 +203,6 @@
         <ComponentName Value="FormTaskProgress"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="wbTaskProgress"/>
       </Unit6>
       <Unit7>
         <Filename Value="BSArch\frmArchiveInfo.pas"/>
@@ -251,7 +210,6 @@
         <ComponentName Value="FormArchiveInfo"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="frmArchiveInfo"/>
       </Unit7>
       <Unit8>
         <Filename Value="BSArch\frmMain.pas"/>
@@ -259,7 +217,6 @@
         <ComponentName Value="FormMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="frmMain"/>
       </Unit8>
       <Unit9>
         <Filename Value="BSArch\frmPack.pas"/>
@@ -267,7 +224,6 @@
         <ComponentName Value="FormPack"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="frmPack"/>
       </Unit9>
       <Unit10>
         <Filename Value="BSArch\frmSearchReplace.pas"/>
@@ -275,7 +231,6 @@
         <ComponentName Value="FormSearchReplace"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="frmSearchReplace"/>
       </Unit10>
     </Units>
   </ProjectOptions>
@@ -286,28 +241,22 @@
       <Filename Value=".\Build\BSArchPro"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir);.\Core;.\BSArch;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\FileContainer;.\External\JsonDataObjects\Source;.\External\VirtualTrees\Source;.\External\vcl-styles-utils\Common;.\External\delphi-detours-library\Source"/>
-      <OtherUnitFiles Value=".\Core;.\BSArch;.\External\ImagingLib\Source\;.\External\ImagingLib\Source\zlib;.\External\libdeflate-pas;.\External\lz4-delphi;.\External\FileContainer;.\External\JsonDataObjects\Source;.\External\VirtualTrees\Source;.\External\vcl-styles-utils\Common;.\External\delphi-detours-library\Source"/>
+      <IncludeFiles Value="Core;BSArch;External\ImagingLib\Source;External\ImagingLib\Source\zlib;External\libdeflate-pas;External\lz4-delphi;External\FileContainer;External\JsonDataObjects\Source;External\vcl-styles-utils\Common;External\delphi-detours-library\Source;External\libdeflate-pas\static;External\zflate\src;$(ProjOutDir)"/>
+      <OtherUnitFiles Value="Core;BSArch;External\ImagingLib\Source;External\ImagingLib\Source\zlib;External\libdeflate-pas;External\lz4-delphi;External\FileContainer;External\JsonDataObjects\Source;External\vcl-styles-utils\Common;External\delphi-detours-library\Source;External\libdeflate-pas\static;External\zflate\src"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>
       <SyntaxOptions>
-        <SyntaxMode Value="Delphi"/>
+        <SyntaxMode Value="unleashed"/>
       </SyntaxOptions>
     </Parsing>
     <CodeGeneration>
       <TargetCPU Value="x86_64"/>
       <TargetOS Value="win64"/>
     </CodeGeneration>
-    <Linking>
-      <Options>
-        <Win32>
-          <GraphicApplication Value="True"/>
-        </Win32>
-      </Options>
-    </Linking>
     <Other>
-      <CustomOptions Value="-dEH_NO_VERSION -dNX_EXCEPTION_LOG_IN_APP_FOLDER"/>
+      <CustomOptions Value="-dEH_NO_VERSION
+-dNX_EXCEPTION_LOG_IN_APP_FOLDER"/>
     </Other>
   </CompilerOptions>
 </CONFIG>

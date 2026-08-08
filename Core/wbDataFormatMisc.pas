@@ -8,6 +8,9 @@
 
 unit wbDataFormatMisc;
 
+{$mode Delphi}
+{$modeswitch inlinevars}
+
 interface
 
 uses
@@ -48,7 +51,7 @@ type
 implementation
 
 uses
-  System.SysUtils;
+  SysUtils;
 
 var
   dfLODSettingsTES5: TdfStructDef;

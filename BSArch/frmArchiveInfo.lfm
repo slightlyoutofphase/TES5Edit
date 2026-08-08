@@ -1,38 +1,44 @@
 object FormArchiveInfo: TFormArchiveInfo
-  Left = 0
-  Top = 0
+  Left = -157
+  Height = 528
+  Top = 554
+  Width = 988
   BorderIcons = [biSystemMenu, biMaximize]
   Caption = 'Archive Info'
   ClientHeight = 528
   ClientWidth = 988
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
-  Font.Style = []
   KeyPreview = True
   Position = poMainFormCenter
+  LCLVersion = '4.99.0.0'
   OnClose = FormClose
-  OnDestroy = FormDestroy
   OnDeactivate = FormDeactivate
+  OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  TextHeight = 13
-  object vtText: TVirtualStringTree
+  object vtText: TLazVirtualStringTree
     Left = 0
+    Height = 528
     Top = 0
     Width = 988
-    Height = 528
     Align = alClient
     BorderStyle = bsNone
     Colors.SelectionTextColor = clWindowText
-    Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
     Font.Name = 'Courier New'
-    Font.Style = []
     Header.AutoSizeIndex = 0
+    Header.Columns = <    
+      item
+        MinWidth = 50
+        Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus, coEditable]
+        Position = 0
+        Text = 'Text'
+        Width = 988
+      end>
     Header.Height = 18
     Header.Options = [hoAutoResize, hoColumnResize, hoHotTrack, hoShowImages, hoShowSortGlyphs]
     IncrementalSearch = isAll
@@ -49,16 +55,6 @@ object FormArchiveInfo: TFormArchiveInfo
     OnGetText = vtTextGetText
     OnInitNode = vtTextInitNode
     OnKeyDown = vtTextKeyDown
-    Touch.InteractiveGestures = [igPan, igPressAndTap]
-    Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
-    Columns = <
-      item
-        MinWidth = 50
-        Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus, coEditable, coStyleColor]
-        Position = 0
-        Text = 'Text'
-        Width = 988
-      end>
   end
   object PopupMenu1: TPopupMenu
     Left = 376

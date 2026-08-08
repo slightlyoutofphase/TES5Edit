@@ -11,13 +11,13 @@ unit frmArchiveInfo;
 interface
 
 uses
-  System.Classes,
+  Classes,
 
-  Vcl.Controls,
-  Vcl.Forms,
-  Vcl.Menus,
+  Controls,
+  Forms,
+  Menus,
 
-  VirtualTrees;
+  laz.VirtualTrees;
   {
   VirtualTrees.AncestorVCL,
   VirtualTrees.BaseAncestorVCL,
@@ -27,7 +27,7 @@ uses
 
 type
   TFormArchiveInfo = class(TForm)
-    vtText: TVirtualStringTree;
+    vtText: TLazVirtualStringTree;
     PopupMenu1: TPopupMenu;
     mniSaveAs: TMenuItem;
     procedure vtTextInitNode(Sender: TBaseVirtualTree; ParentNode,
@@ -58,20 +58,20 @@ implementation
 {$R *.lfm}
 
 uses
-  System.StrUtils,
-  System.SysUtils,
+  StrUtils,
+  SysUtils,
 
-  Vcl.ClipBrd,
-  Vcl.Dialogs,
+  ClipBrd,
+  Dialogs,
 
-  Winapi.Windows;
+  Windows;
 
 //============================================================================
 procedure TFormArchiveInfo.mniSaveAsClick(Sender: TObject);
 begin
-  with TFileSaveDialog.Create(Self) do try
+  with TSaveDialog.Create(Self) do try
     Title := 'Save As';
-    DefaultFolder := ExtractFilePath(aBSA);
+    InitialDir := ExtractFilePath(aBSA);
     FileName := ExtractFileName(aBSA) + '.txt';
     if Execute then
       slText.SaveToFile(FileName);
@@ -86,7 +86,7 @@ procedure TFormArchiveInfo.vtTextGetText(Sender: TBaseVirtualTree;
   var CellText: string);
 begin
   case Column of
-    0: CellText := slText[Node.Index];
+    0: CellText := slText[Node^.Index];
   end;
 end;
 
@@ -109,7 +109,7 @@ begin
     var s: string := '';
     for var Node in vtText.SelectedNodes do begin
       if s <> '' then s := s + #13#10;
-      s := s + slText[Node.Index];
+      s := s + slText[Node^.Index];
     end;
     Clipboard.AsText := s;
   end;
@@ -158,7 +158,7 @@ begin
 
     if bFound then
       for var n in vtText.Nodes do
-        if n.Index = i then begin
+        if n^.Index = i then begin
           vtText.Selected[n] := True;
           vtText.ScrollIntoView(n, True);
           Break;

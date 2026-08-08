@@ -1,31 +1,20 @@
 {******************************************************************************}
-{  ZLibUtils.pas - FPC-compatible ZCompressStream (and helpers)                 }
+{  FPC-compatible ZCompressStream (and helpers)                                }
 {                                                                              }
 {  Compatible with Delphi System.ZLib.ZCompressStream API.                     }
 {  Uses the Free Pascal packages/zlib bindings (libz / zlib1).                 }
-{                                                                              }
-{  Usage:                                                                      }
-{    uses Classes, SysUtils, ZLibUtils;                                        }
-{                                                                              }
-{    ZCompressStream(InStream, OutStream);           // default level          }
-{    ZCompressStream(InStream, OutStream, zcMax);    // or explicit level      }
 {******************************************************************************}
 
 unit ZLibUtils;
 
 {$mode objfpc}{$H+}
-{$IFDEF WINDOWS}
-  { Make sure zlib1.dll (or equivalent) is available / linked }
-{$ENDIF}
 
 interface
 
 uses
-  SysUtils, Classes,
-  zlib;   { FPC packages/zlib - https://gitlab.com/freepascal.org/fpc/source/-/tree/main/packages/zlib }
+  SysUtils, Classes, zlib;
 
 type
-  { Compression levels - identical to Delphi System.ZLib.TZCompressionLevel }
   TZCompressionLevel = (
     zcNone,      { Z_NO_COMPRESSION       =  0 }
     zcFastest,   { Z_BEST_SPEED           =  1 }
@@ -33,10 +22,9 @@ type
     zcMax        { Z_BEST_COMPRESSION     =  9 }
   );
 
-  { Exception hierarchy matching Delphi }
   EZLibError = class(Exception);
   EZCompressionError = class(EZLibError);
-  EZDecompressionError = class(EZLibError);  { included for completeness }
+  EZDecompressionError = class(EZLibError);  
 
 {******************************************************************************}
 { ZCompressStream                                                              }

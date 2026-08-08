@@ -7,36 +7,34 @@
 *******************************************************************************}
 
 {$WARN SYMBOL_PLATFORM OFF}
+
 unit frmMain;
+
+{$mode Delphi}
+{$modeswitch inlinevars}
 
 interface
 
 uses
-  System.Classes,
-  System.IniFiles,
-  System.SysUtils,
-
+  {$ifdef Windows}
+  Windows,
+  {$endif}
+  Classes,
+  IniFiles,
+  SysUtils,
+  LCLType,
+  LCLIntf,
   JsonDataObjects,
-
-  Vcl.Controls,
-  Vcl.Dialogs,
-  Vcl.ExtCtrls,
-  Vcl.Forms,
-  Vcl.Mask,
-  Vcl.Menus,
-  Vcl.StdCtrls,
-
-  VirtualTrees,
-  {
-  VirtualTrees.AncestorVCL,
-  VirtualTrees.BaseAncestorVCL,
-  VirtualTrees.BaseTree,
-  VirtualTrees.Types,
-  }
-
-  WinApi.Messages,
-  WinApi.Windows,
-
+  System.Zip,
+  Controls,
+  Dialogs,
+  ExtCtrls,
+  Forms,
+  Graphics,
+  Menus,
+  StdCtrls,
+  Laz.VirtualTrees,
+  LMessages,
   wbBSArchive;
 
 const
@@ -51,7 +49,7 @@ type
     pnlFilter: TPanel;
     lblAssets: TLabel;
     edFilter: TLabeledEdit;
-    vtAssets: TVirtualStringTree;
+    vtAssets: TLazVirtualStringTree;
     rbAll: TRadioButton;
     rbCompressed: TRadioButton;
     rbUncompressed: TRadioButton;
@@ -84,6 +82,7 @@ type
     mniAssetFindIdentical: TMenuItem;
     dlgIdenticalFiles: TTaskDialog;
     mniAssetOpen: TMenuItem;
+    procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
     procedure vtAssetsCompareNodes(Sender: TBaseVirtualTree; Node1,
       Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
     procedure vtAssetsGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
@@ -156,7 +155,7 @@ type
       const aArchiveName: string = '';
       aCompressed: Boolean = False
     ): TAsset;
-    procedure AddAssetsFromFiles(aList: TStrings);
+    procedure AddAssetsFromFiles(const aList: array of String);
     procedure RefreshAssets(const aAssets: TAssets = nil; aFocusSelected: Boolean = True);
     procedure RefreshFilterLabel;
     function GetAssets(aSelected: Boolean = False): TAssets;
@@ -166,11 +165,7 @@ type
     procedure UnpackAssets(Assets: TAssets);
     procedure PackAssets(const Assets: TAssets);
     function BeforePackingChecks(const Assets: TAssets): Boolean;
-    procedure CreateWnd; override;
-    procedure DestroyWnd; override;
-    procedure WMDropFiles(var msg: TWMDropFiles); message WM_DROPFILES;
-    procedure WMPack(var msg: TMessage); message WM_PACK;
-    procedure WndProc(var Message: TMessage); override;
+    {procedure WndProc(var Message: TLMessage); override;}
   end;
 
   TAssetNode = record
@@ -223,16 +218,10 @@ implementation
 
 uses
   System.IOUtils,
-  System.StrUtils,
-  System.Types,
-  System.Zip,
-
-  Vcl.ClipBrd,
-  Vcl.Graphics,
-  Vcl.Styles.Utils.SystemMenu,
-  Vcl.Themes,
-
-  WinApi.ShellApi,
+  StrUtils,
+  Types,
+  Process,
+  ClipBrd,
 
   frmArchiveInfo,
   frmPack,
@@ -247,42 +236,64 @@ uses
 //============================================================================
 function DDS2XBOX(const aData: TBytes): TBytes;
 var
-  TempFile, params: string;
-  Info: SHELLEXECUTEINFO;
-  ErrCode: Cardinal;
+  TempFile, ExePath, OutputStr: string;
+  ExitStatus, RunResult: Integer;
+  FS: TFileStream;
 begin
-  TempFile := TPath.GetTempPath + TPath.GetGUIDFileName + '.dds';
+  // Unique temp file with .dds extension (GUID is collision-resistant)
+  TempFile := IncludeTrailingPathDelimiter(GetTempDir) +
+              TGUID.NewGuid.ToString(True) + '.dds';  // SkipBrackets=True
+
   try
-    TFile.WriteAllBytes(TempFile, aData);
+    // Write input DDS
+    FS := TFileStream.Create(TempFile, fmCreate);
+    try
+      if Length(aData) > 0 then
+        FS.WriteBuffer(aData[0], Length(aData));
+    finally
+      FS.Free;
+    end;
   except
-    raise Exception.Create('Can''t create temp file for DDS XBox convertion: ' + TempFile);
+    on E: Exception do
+      raise Exception.Create('Can''t create temp file for DDS Xbox conversion: ' +
+                             TempFile + sLineBreak + E.Message);
   end;
 
-  params := '-xbox "' + TempFile + '"';
-
   try
-    FillChar(Info, SizeOf(Info), 0);
-    Info.cbSize := SizeOf(SHELLEXECUTEINFO);
-    Info.fMask := SEE_MASK_NOCLOSEPROCESS or SEE_MASK_FLAG_NO_UI;
-    Info.nShow := SW_HIDE;
-    Info.lpFile := PChar(ExtractFilePath(ParamStr(0)) + 'xtexconv.exe');
-    Info.lpParameters := PChar(params);
-    Info.lpDirectory := PChar(ExtractFilePath(TempFile));
+    ExePath := IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0))) + 'xtexconv.exe';
 
-    if not ShellExecuteEx(@Info) then
-      raise Exception.Create('Unable to start xtexconv.exe');
+    // Run hidden, wait for exit, capture stdout/stderr, get exit code.
+    // poNoConsole + swoHIDE prevents console flash (Windows).
+    // Current directory set to the temp folder (matches original ShellExecuteEx behaviour).
+    RunResult := RunCommandInDir(
+      ExtractFilePath(TempFile),          // curdir
+      ExePath,                            // executable
+      ['-xbox', TempFile],                // parameters (TProcess quotes as needed)
+      OutputStr,                          // captured output (useful for diagnostics)
+      ExitStatus,                         // process exit code
+      [poNoConsole],                      // options
+      swoHIDE                             // show window
+    );
 
-    WaitForSingleObject(Info.hProcess, INFINITE);
-    GetExitCodeProcess(Info.hProcess, ErrCode);
-    CloseHandle(Info.hProcess);
+    if RunResult <> 0 then
+      raise Exception.Create('Unable to start xtexconv.exe' + sLineBreak + OutputStr);
 
-    if ErrCode <> 0 then
-      raise Exception.Create('xtexconv.exe error code ' + ErrCode.ToHexString(8));
+    if ExitStatus <> 0 then
+      raise Exception.CreateFmt('xtexconv.exe error code %s%s%s',
+        [IntToHex(ExitStatus, 8), sLineBreak, OutputStr]);
 
-    Result := TFile.ReadAllBytes(TempFile);
+    // Read converted file back
+    FS := TFileStream.Create(TempFile, fmOpenRead or fmShareDenyWrite);
+    try
+      SetLength(Result, FS.Size);
+      if FS.Size > 0 then
+        FS.ReadBuffer(Result[0], FS.Size);
+    finally
+      FS.Free;
+    end;
   finally
     if FileExists(TempFile) then
-      TFile.Delete(TempFile);
+      DeleteFile(TempFile);  // SysUtils.DeleteFile
   end;
 end;
 
@@ -463,22 +474,20 @@ begin
 end;
 
 //============================================================================
-procedure TFormMain.AddAssetsFromFiles(aList: TStrings);
+procedure TFormMain.AddAssetsFromFiles(const aList: array of String);
 type
   TCollisionOperation = (opNone, opReplace, opSkip, opAdd);
 var
   NewAssets: TList;
   SortedAssets: TStringList;
   i, j: Integer;
-  f: string;
 begin
   NewAssets := TList.Create;
   SortedAssets := TStringList.Create;
 
   try
 
-  for i := 0 to Pred(aList.Count) do begin
-    f := aList[i];
+  for var f in aList do begin
 
     if TFileAttribute.faDirectory in TPath.GetAttributes(f) then begin
       for var ff in TDirectory.GetFiles(f, '*.*', TSearchOption.soAllDirectories) do
@@ -580,40 +589,7 @@ begin
 end;
 
 //============================================================================
-procedure TFormMain.WMDropFiles(var msg: TWMDropFiles);
-var
-  i, cnt: integer;
-  fileName: array[0..MAX_PATH] of char;
-  f: string;
-  sl: TStringList;
-begin
-  sl := TStringList.Create;
-  sl.Duplicates := dupIgnore;
-  try
-    cnt := DragQueryFile(msg.Drop, $FFFFFFFF, fileName, MAX_PATH);
-    for i := 0 to Pred(cnt) do begin
-      DragQueryFile(msg.Drop, i, fileName, MAX_PATH);
-      f := fileName;
-      sl.Add(f);
-    end;
-
-    AddAssetsFromFiles(sl);
-  finally
-    DragFinish(msg.Drop);
-    sl.Free;
-  end;
-
-  RefreshAssets;
-end;
-
-//============================================================================
-procedure TFormMain.WMPack(var msg: TMessage);
-begin
-  btnPack.Click;
-end;
-
-//============================================================================
-procedure TFormMain.WndProc(var Message: TMessage);
+{procedure TFormMain.WndProc(var Message: TLMessage);
 begin
   if Message.Msg = CM_CUSTOMSTYLECHANGED then begin
     var StyleName := TStyleManager.ActiveStyle.Name;
@@ -624,21 +600,7 @@ begin
       end;
   end;
   inherited;
-end;
-
-//============================================================================
-procedure TFormMain.CreateWnd;
-begin
-  inherited;
-  DragAcceptFiles(WindowHandle, True);
-end;
-
-//============================================================================
-procedure TFormMain.DestroyWnd;
-begin
-  DragAcceptFiles(WindowHandle, False);
-  inherited;
-end;
+end;       }
 
 //============================================================================
 procedure TFormMain.edFilterKeyPress(Sender: TObject; var Key: Char);
@@ -710,7 +672,7 @@ procedure TFormMain.vtAssetsBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; const CellRect: TRect; var ContentRect: TRect);
 begin
-  var Asset := PAssetNode(Sender.GetNodeData(Node)).Asset;
+  {var Asset := PAssetNode(Sender.GetNodeData(Node)).Asset;
   if Asset.ArchiveName = '' then
     Exit;
 
@@ -719,7 +681,7 @@ begin
     TargetCanvas.Brush.Color := bgColor - $D0D0D
   else
     TargetCanvas.Brush.Color := bgColor;
-  TargetCanvas.FillRect(CellRect);
+  TargetCanvas.FillRect(CellRect);}
 end;
 
 //============================================================================
@@ -743,6 +705,12 @@ begin
     0: Result := CompareText(Asset1.AssetName, Asset2.AssetName);
     1: Result := CompareText(Asset1.FileName, Asset2.FileName);
   end;
+end;
+
+procedure TFormMain.FormDropFiles(Sender: TObject; const FileNames: array of string);
+begin
+  AddAssetsFromFiles(FileNames);
+  RefreshAssets;
 end;
 
 //============================================================================
@@ -849,10 +817,10 @@ end;
 //============================================================================
 procedure TFormMain.FormCreate(Sender: TObject);
 begin
-  with TVclStylesSystemMenu.Create(Self) do begin
+  {with TVclStylesSystemMenu.Create(Self) do begin
     ShowNativeStyle := True;
     MenuCaption := 'Theme';
-  end;
+  end;}
 
   Application.Title := Application.Title + ' ' + cBSArchVersion;
   {$IFDEF WIN64}
@@ -890,7 +858,7 @@ begin
   Split := Settings.ReadInteger('General', 'Split', -1);
   CompressionType := Settings.ReadString('General', 'CompressionType', '');
 
-  TStyleManager.TrySetStyle(Settings.ReadString('UI', 'Theme', TStyleManager.ActiveStyle.Name), False);
+  {TStyleManager.TrySetStyle(Settings.ReadString('UI', 'Theme', TStyleManager.ActiveStyle.Name), False);}
 
   // skip reading form position if Shift is pressed
   if GetKeyState(VK_SHIFT) >= 0 then begin
@@ -914,7 +882,7 @@ begin
       vtAssets.Header.Columns[i].Width := Settings.ReadInteger(Name, 'vtAssetsColumnWidth' + IntToStr(i), vtAssets.Header.Columns[i].Width);
   end;
 
-  ListFileName := Settings.ReadString('General', 'ListFileName', ExtractFilePath(ParamStr(0) + 'New' + cBSArchExtension));
+  ListFileName := Settings.ReadString('General', 'ListFileName', TPath.Combine(ExtractFilePath(ParamStr(0)), 'New' + cBSArchExtension));
   DefaultListFileName := TPath.Combine(SettingsFolder, 'Default' + cBSArchExtension);
 
   ArchiveManager := TArchiveManager.Create;
@@ -940,14 +908,14 @@ begin
         if TFile.Exists(f) or TDirectory.Exists(f) then
           sl.Add(f);
       end;
-      AddAssetsFromFiles(sl);
+      AddAssetsFromFiles(sl.ToStringArray);
     finally
       sl.Free;
     end;
   end
   // empty command line - restore the last session
   else if FileExists(DefaultListFileName) then
-    LoadList(DefaultListFileName, False);
+    LoadList(DefaultListFileName, True);
 
   RefreshAssets;
 end;
@@ -1119,15 +1087,23 @@ begin
         bZipped := False;
       end;
 
-      if bZipped then begin
+    if bZipped then begin
+      try
         zip.Read('assets.json', b);
-        zip.Close;
-      end else
-        b := TFile.ReadAllBytes(aFileName);
+      except
+        on E: Exception do
+          if bIgnoreErrors then
+            Exit          // treat missing assets.json as "no list"
+          else
+            raise;
+      end;
+      zip.Close;
+    end else
+      b := TFile.ReadAllBytes(aFileName);
 
-      st := TBytesStream.Create(b);
-      js.LoadFromStream(st);
-      Result := True;
+    st := TBytesStream.Create(b);
+    js.LoadFromStream(st);
+    Result := True;
     except
       if not bIgnoreErrors then raise else Exit;
     end;
@@ -1238,12 +1214,12 @@ end;
 //============================================================================
 procedure TFormMain.mniLoadListClick(Sender: TObject);
 begin
-  with TFileOpenDialog.Create(Self) do try
-    Options := [fdoFileMustExist];
-    var f := FileTypes.Add;
-    f.DisplayName := 'BSArchPro List (*' + cBSArchExtension + ')';
-    f.FileMask := '*' + cBSArchExtension;
-    DefaultFolder := ExtractFilePath(ListFileName);
+  with TOpenDialog.Create(Self) do
+  try
+    Options := [ofFileMustExist];  // equivalent to fdoFileMustExist; add ofPathMustExist etc. if needed
+    Filter := 'BSArchPro List (*' + cBSArchExtension + ')|*' + cBSArchExtension;
+    // Optional: FilterIndex := 1;
+    InitialDir := ExtractFilePath(ListFileName);
     FileName := ExtractFileName(ListFileName);
     if not Execute then
       Exit;
@@ -1259,16 +1235,19 @@ end;
 //============================================================================
 procedure TFormMain.mniSaveListClick(Sender: TObject);
 begin
-  with TFileSaveDialog.Create(Self) do try
-    var f := FileTypes.Add;
-    f.DisplayName := 'BSArchPro List (*' + cBSArchExtension + ')';
-    f.FileMask := '*' + cBSArchExtension;
-    DefaultFolder := ExtractFilePath(ListFileName);
+  with TSaveDialog.Create(Self) do
+  try
+    // Common options for save:
+    // Options := [ofOverwritePrompt, ofPathMustExist, ofEnableSizing];
+    Filter := 'BSArchPro List (*' + cBSArchExtension + ')|*' + cBSArchExtension;
+    DefaultExt := cBSArchExtension;  // helpful so the extension is added automatically if missing
+    InitialDir := ExtractFilePath(ListFileName);
     FileName := ExtractFileName(ListFileName);
     if not Execute then
       Exit;
 
-    SaveList(TPath.ChangeExtension(FileName, cBSArchExtension));
+    // Ensure the extension (TPath is in SysUtils / LazFileUtils; or use ChangeFileExt)
+    SaveList(ChangeFileExt(FileName, cBSArchExtension));  // or TPath.ChangeExtension if you have System.IOUtils
     Settings.WriteString('General', 'ListFileName', FileName);
   finally
     Free;
@@ -1279,6 +1258,23 @@ end;
 procedure TFormMain.vtAssetsDblClick(Sender: TObject);
 begin
   mniAssetOpen.Click;
+end;
+
+procedure OpenFileSmart(const FileName: string);
+{$IFDEF WINDOWS}
+var
+  Res: HINST;
+{$ENDIF}
+begin
+  {$IFDEF WINDOWS}
+  Res := ShellExecute(0, 'open', PChar(FileName), nil, nil, SW_SHOWNORMAL);
+  if Res = 31 then  // no association
+    ShellExecute(0, 'openas', PChar(FileName), nil, nil, SW_SHOWNORMAL)
+  else if Res <= 32 then
+    // other error – fall through or handle
+  {$ELSE}
+  OpenDocument(FileName);
+  {$ENDIF}
 end;
 
 //============================================================================
@@ -1324,9 +1320,7 @@ begin
   else
     f := asset.FileName;
 
-  // error 31 - no associated application
-  if ShellExecute(Handle, 'open', PChar(f), '', '', SW_SHOWNORMAL) = 31 then
-    ShellExecute(Handle, 'openas', PChar(f), '', '', SW_SHOWNORMAL);
+  OpenFileSmart(f);
 end;
 
 //============================================================================
@@ -1349,13 +1343,14 @@ end;
 
 //============================================================================
 procedure TFormMain.mniAssetReplaceClick(Sender: TObject);
+var asset: Tasset;
 begin
   with TFormSearchReplace.Create(Self) do try
 
     if ShowModal <> mrOk then
       Exit;
 
-    for var asset in GetAssets(True) do
+    for asset in GetAssets(True) do
       if rbReplace.Checked then
         asset.AssetName := StringReplace(asset.AssetName, SearchText, ReplaceText, [rfReplaceAll, rfIgnoreCase])
       else if rbPrepend.Checked then
@@ -1449,6 +1444,7 @@ end;
 procedure TFormMain.mniAssetFindIdenticalClick(Sender: TObject);
 var
   Same: TwbSameData;
+  mr: TModalResult;
 begin
   var CompareAssets := GetAssets;
 
@@ -1470,7 +1466,7 @@ begin
     LowIndex := Low(CompareAssets);
     HighIndex := High(CompareAssets);
     ProcessProc := ProcCompare;
-    var mr := Execute;
+    mr := Execute;
     if mr = mrAbort then begin
       DialogError('Error reading:'#13 + CompareAssets[ErrorIndex].FileName + #13#13 + ErrorMessage);
       Exit;
@@ -1571,10 +1567,12 @@ begin
 
     LastUnpackFolder := Settings.ReadString('General', 'LastUnpackFolder', ExtractFilePath(ParamStr(0)));
 
-    with TFileOpenDialog.Create(Application.MainForm) do try
+    with TSelectDirectoryDialog.Create(Application.MainForm) do
+    try
       Title := 'Select folder for unpacking';
-      Options := [fdoPickFolders, fdoPathMustExist];
-      DefaultFolder := LastUnpackFolder;
+      Options := Options + [ofPathMustExist];  // equivalent of fdoPathMustExist
+      // Optional: Options := Options + [ofEnableSizing]; etc.
+      InitialDir := LastUnpackFolder;          // was DefaultFolder
       if not Execute then
         Exit;
 
@@ -1648,11 +1646,15 @@ begin
   var asset := PAssetNode(vtAssets.GetNodeData(vtAssets.FocusedNode)).Asset;
   SaveFileName := ExtractFileName(asset.FileName);
 
-  with TFileSaveDialog.Create(Application.MainForm) do try
+  with TSaveDialog.Create(Application.MainForm) do
+  try
     Title := 'Save As';
-    //Options := [fdoPathMustExist];
+    // Options := [ofPathMustExist];  // uncomment if you want it
+    // Common useful defaults:
+    // Options := Options + [ofOverwritePrompt, ofPathMustExist];
     FileName := SaveFileName;
-    DefaultFolder := Settings.ReadString('General', 'LastUnpackFolder', ExtractFilePath(ParamStr(0)));
+    InitialDir := Settings.ReadString('General', 'LastUnpackFolder',
+                                      ExtractFilePath(ParamStr(0)));  // was DefaultFolder
     if not Execute then
       Exit;
 
@@ -1677,6 +1679,7 @@ procedure TFormMain.mniArchiveInfoClick(Sender: TObject);
 var
   txt: TStringList;
   bsa: TwbBSArchive;
+  f: TwbBSFileEntry;
 begin
   var asset := PAssetNode(vtAssets.GetNodeData(vtAssets.FocusedNode)).Asset;
   try
@@ -1691,7 +1694,7 @@ begin
   txt := TStringList.Create;
   with TFormArchiveInfo.Create(Self) do try
     txt.Text := bsa.Info;
-    for var f in bsa do begin
+    for f in bsa do begin
       txt.Add('');
       txt.Add(f.Name);
       for var s in f.Info.Split([#13#10]) do
@@ -1729,7 +1732,7 @@ begin
       BadAssets[Low(BadAssets)].AssetName + #13#13 +
       'Asset name is empty, contains invalid characters or has no folder part ' +
       '(archives don''t have root folder).';
-    dlgPackingCheck.Buttons[1].Enabled := False;
+    //dlgPackingCheck.Buttons[1].Enabled := False;
     dlgPackingCheck.Execute;
     if dlgPackingCheck.ModalResult = 100 then
       RefreshAssets(BadAssets);
@@ -1749,9 +1752,9 @@ begin
       'Usage of non-ASCII characters is not recommended in packed asset names, ' +
       'the game might not find such files in archive. Either rename them or keep loose. ' +
       'Press "Continue" to pack anyway.';
-    dlgPackingCheck.Buttons[1].Enabled := True;
+    //dlgPackingCheck.Buttons[1].Enabled := True;
     dlgPackingCheck.Execute;
-    dlgPackingCheck.Buttons[1].Enabled := False;
+    //dlgPackingCheck.Buttons[1].Enabled := False;
     if dlgPackingCheck.ModalResult = 100 then begin
       RefreshAssets(BadAssets);
       Result := False;
@@ -1777,9 +1780,9 @@ begin
       'This file shouldn''t be packed because the game is unlikely to use it ' +
       'from the archive. Press "Continue" to pack anyway.';
     // enable Continue because this can be ignored
-    dlgPackingCheck.Buttons[1].Enabled := True;
+    //dlgPackingCheck.Buttons[1].Enabled := True;
     dlgPackingCheck.Execute;
-    dlgPackingCheck.Buttons[1].Enabled := False;
+    //dlgPackingCheck.Buttons[1].Enabled := False;
     if dlgPackingCheck.ModalResult = 100 then begin
       RefreshAssets(BadAssets);
       Result := False;
@@ -1805,7 +1808,7 @@ begin
       'Music/Sound/String files don''t work in the game when compressed (except .fuz). Press "Continue" ' +
       'to compress anyway if you have some sort of a bugfix mod installed to amend that.';
     // enable Continue because this can be ignored
-    dlgPackingCheck.Buttons[1].Enabled := True;
+    //dlgPackingCheck.Buttons[1].Enabled := True;
     dlgPackingCheck.Execute;
     if dlgPackingCheck.ModalResult = 100 then begin
       RefreshAssets(BadAssets);
@@ -1849,7 +1852,7 @@ begin
       'Repeated asset name:'#13 +
       BadAssets[Low(BadAssets)].AssetName + #13#13 +
       'Asset names inside archive must be unique.';
-    dlgPackingCheck.Buttons[1].Enabled := False;
+    //dlgPackingCheck.Buttons[1].Enabled := False;
     dlgPackingCheck.Execute;
     if dlgPackingCheck.ModalResult = 100 then
       RefreshAssets(BadAssets);
@@ -1863,6 +1866,8 @@ procedure TFormMain.PackAssets(const Assets: TAssets);
 var
   slFiles: TStringList;
   bsa: TAssetsPacker;
+  s: String;
+  b: TwbBSArchive;
 begin
   if Length(Assets) = 0 then
     Exit;
@@ -1952,11 +1957,11 @@ begin
   bsa.CreateArchive(ArchiveFileName, ArchiveType, slFiles, lstComp);
 
   // single main thread
-  if DebugHook <> 0 then begin
-    for var i := 0 to Pred(bsa.ProcessCount) do bsa.Process;
-    bsa.Save;
-    bSuccess := True;
-  end else
+  //if DebugHook <> 0 then begin
+  //  for var i := 0 to Pred(bsa.ProcessCount) do bsa.Process;
+  //  bsa.Save;
+  //  bSuccess := True;
+  //end else
 
   // multi threaded
   with TwbTaskProgress.Create(Self) do try
@@ -1986,8 +1991,8 @@ begin
 
   // if not automated then final message window after successful packing
   if not bAutoMode and bSuccess then with TTaskDialog.Create(Self) do try
-    var s := 'Created archive(s):'#13;
-    for var b in bsa.Archives do begin
+     s := 'Created archive(s):'#13;
+    for b in bsa.Archives do begin
       s := s + Format('%s   %s  %.0n files', [b.FileName, FormatSize(b.ArchiveSize), b.Count + 0.0]);
       if b.ArchiveSharedFiles <> 0 then
         s := s + Format('  %.0n shared saving %s', [b.ArchiveSharedFiles + 0.0, FormatSize(b.ArchiveSharedSize)]);
@@ -2008,7 +2013,7 @@ begin
     end;
     Execute;
     if ModalResult = 100 then
-      for var b in bsa.Archives do
+      for b in bsa.Archives do
         try TFile.WriteAllBytes(ChangeFileExt(b.FileName, '.override'), nil); except end;
   finally
     Free;
