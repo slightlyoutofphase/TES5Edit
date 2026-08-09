@@ -13,10 +13,11 @@ unit wbLocalization;
 interface
 
 uses
-  System.Classes,
-  System.SysUtils,
+  Classes,
+  SysUtils,
 
-  wbInterface;
+  wbInterface,
+  wbExtra;
 
 const
   sStringID = 'STRINGID:';
@@ -37,7 +38,7 @@ type
     fFileType    : TwbLStringType;
     fStrings     : TStrings;
     fModified    : Boolean;
-    fNextID      : Cardinal;
+    fNextID      : PtrUInt;
 
     procedure Init;
     function FileStringType(const aFileName: string): TwbLStringType;
@@ -47,23 +48,23 @@ type
     procedure WriteLenZString(aStream: TMemoryStream; const aString: string);
     procedure ReadDirectory(aStream: TMemoryStream);
   protected
-    function Get(Index: Cardinal): string;
-    procedure Put(Index: Cardinal; const S: string);
+    function Get(Index: PtrUInt): string;
+    procedure Put(Index: PtrUInt; const S: string);
   public
-    property Strings[Index: Cardinal]: string read Get write Put; default;
+    property Strings[Index: PtrUInt]: string read Get write Put; default;
     property Items: TStrings read fStrings;
     property Name: string read fName;
     property FileName: string read fFileName;
     property Modified: Boolean read fModified write fModified;
-    property NextID: Cardinal read fNextID;
+    property NextID: PtrUInt read fNextID;
     constructor Create(const aFileName: string); overload;
     constructor Create(const aFileName: string; const aData: TBytes); overload;
     destructor Destroy; override;
     function Count: Integer;
-    function IndexToID(Index: Integer): Cardinal;
-    function IDExists(ID: Cardinal): Boolean;
-    function AddString(ID: Cardinal; const S: string): Boolean;
-    function Find(ID: Cardinal; out s: string): Boolean;
+    function IndexToID(Index: Integer): PtrUInt;
+    function IDExists(ID: PtrUInt): Boolean;
+    function AddString(ID: PtrUInt; const S: string): Boolean;
+    function Find(ID: PtrUInt; out s: string): Boolean;
     procedure WriteToStream(const aStream: TStream);
     procedure ExportToFile(const aFileName: string);
   end;
@@ -91,9 +92,9 @@ type
     procedure LoadForFile(const aFileName: string);
     function AddLocalization(const aFileName: string): TwbLocalizationFile; overload;
     function AddLocalization(const aFileName: string; const aData: TBytes): TwbLocalizationFile; overload;
-    function GetValue(ID: Cardinal; aElement: IwbElement; out aValue: string): Boolean;
-    function SetValue(ID: Cardinal; aElement: IwbElement; const aValue: string): Cardinal;
-    function AddValue(const aValue: string; aElement: IwbElement): Cardinal;
+    function GetValue(ID: PtrUInt; aElement: IwbElement; out aValue: string): Boolean;
+    function SetValue(ID: PtrUInt; aElement: IwbElement; const aValue: string): PtrUInt;
+    function AddValue(const aValue: string; aElement: IwbElement): PtrUInt;
     function GetLocalizationFileNameByElement(aElement: IwbElement): string;
     function GetLocalizationFileNameByType(const aPluginFile: string; ls: TwbLStringType): string;
     procedure GetStringsFromFile(const aFileName: string; const aList: TStrings);
@@ -226,12 +227,12 @@ begin
       Result := i;
 end;
 
-function TwbLocalizationFile.Find(ID: Cardinal; out s: string): Boolean;
+function TwbLocalizationFile.Find(ID: PtrUInt; out s: string): Boolean;
 var
   idx: integer;
 begin
   s := '';
-  idx := fStrings.IndexOfObject(Pointer(ID));
+  idx := fStrings.IndexOfObject(TObject(Pointer(ID)));
   Result := idx >= 0;
   if Result then
     s := fStrings[idx]
@@ -329,7 +330,7 @@ end;
 procedure TwbLocalizationFile.ReadDirectory(aStream: TMemoryStream);
 var
   i: integer;
-  scount, id, offset: Cardinal;
+  scount, id, offset: PtrUInt;
   oldPos: int64;
   s: string;
 begin
@@ -348,7 +349,7 @@ begin
         s := ReadZString(aStream)
       else
         s := ReadLenZString(aStream);
-      fStrings.AddObject(s, pointer(id));
+      fStrings.AddObject(s, TObject(pointer(id)));
       if Succ(id) > fNextID then
         fNextID := Succ(id);
       aStream.Position := oldPos;
@@ -359,7 +360,7 @@ procedure TwbLocalizationFile.WriteToStream(const aStream: TStream);
 var
   dir, data: TMemoryStream;
   i: integer;
-  c: Cardinal;
+  c: PtrUInt;
 begin
   dir := TMemoryStream.Create;
   data := TMemoryStream.Create;
@@ -368,7 +369,7 @@ begin
   dir.WriteBuffer(c, SizeOf(c)); // dataSize, will overwrite later
   try
     for i := 0 to Pred(fStrings.Count) do begin
-      c := Cardinal(fStrings.Objects[i]);
+      c := PtrUInt(fStrings.Objects[i]);
       dir.WriteBuffer(c, SizeOf(c)); // ID
       c := data.Position;
       dir.WriteBuffer(c, SizeOf(c)); // relative position
@@ -394,36 +395,36 @@ begin
   Result := fStrings.Count;
 end;
 
-function TwbLocalizationFile.IndexToID(Index: Integer): Cardinal;
+function TwbLocalizationFile.IndexToID(Index: Integer): PtrUInt;
 begin
   if Index < Count then
-    Result := Cardinal(fStrings.Objects[Index])
+    Result := PtrUInt(fStrings.Objects[Index])
   else
     Result := 0;
 end;
 
-function TwbLocalizationFile.IDExists(ID: Cardinal): Boolean;
+function TwbLocalizationFile.IDExists(ID: PtrUInt): Boolean;
 begin
-  Result := fStrings.IndexOfObject(Pointer(ID)) >= 0;
+  Result := fStrings.IndexOfObject(TObject(Pointer(ID))) >= 0;
 end;
 
-function TwbLocalizationFile.Get(Index: Cardinal): string;
+function TwbLocalizationFile.Get(Index: PtrUInt): string;
 var
   idx: integer;
 begin
   Result := '';
-  idx := fStrings.IndexOfObject(Pointer(Index));
+  idx := fStrings.IndexOfObject(TObject(Pointer(Index)));
   if idx >= 0 then
     Result := fStrings[idx]
   else
     Result := '<Error: Unknown lstring ID ' + IntToHex(Index, 8) + '>';
 end;
 
-procedure TwbLocalizationFile.Put(Index: Cardinal; const S: string);
+procedure TwbLocalizationFile.Put(Index: PtrUInt; const S: string);
 var
   idx: integer;
 begin
-  idx := fStrings.IndexOfObject(Pointer(Index));
+  idx := fStrings.IndexOfObject(TObject(Pointer(Index)));
   if idx >= 0 then
     if fStrings[idx] <> S then begin
       fStrings[idx] := S;
@@ -431,13 +432,13 @@ begin
     end;
 end;
 
-function TwbLocalizationFile.AddString(ID: Cardinal; const S: string): Boolean;
+function TwbLocalizationFile.AddString(ID: PtrUInt; const S: string): Boolean;
 begin
   Result := false;
   if ID < NextID then
     Exit;
 
-  fStrings.AddObject(S, Pointer(ID));
+  fStrings.AddObject(S, TObject(Pointer(ID)));
   fNextID := Succ(ID);
   fModified := true;
 
@@ -452,7 +453,7 @@ begin
   sl := TStringList.Create;
   try
     for i := 0 to Pred(fStrings.Count) do begin
-      sl.Add('[' + IntToHex(Integer(fStrings.Objects[i]), 8) + ']');
+      sl.Add('[' + IntToHex(PtrInt(fStrings.Objects[i]), 8) + ']');
       sl.Add(fStrings[i]);
     end;
     sl.SaveToFile(aFileName);
@@ -611,7 +612,7 @@ begin
         for i := 0 to Pred(sl.Count) do begin
           s := sl[i];
           if s.EndsWith('strings', True) then begin
-            s := ChangeFileExt(s, '').ToLower;
+            s := AnsiString(ChangeFileExt(s, '')).ToLower;
             ParseString;
           end;
         end;
@@ -715,14 +716,14 @@ begin
 end;
 
 // create a new lstring from aValue for aElement
-function TwbLocalizationHandler.AddValue(const aValue: string; aElement: IwbElement): Cardinal;
+function TwbLocalizationHandler.AddValue(const aValue: string; aElement: IwbElement): PtrUInt;
 var
   ls: TwbLStringType;
   FileName: string;
   wblf: array [TwbLStringType] of TwbLocalizationFile;
   idx: integer;
   data: TBytes;
-  ID: Cardinal;
+  ID: PtrUInt;
 begin
   Result := 0;
 
@@ -755,7 +756,7 @@ begin
     if ReuseDup then begin
       idx := wblf[ls].fStrings.IndexOf(aValue);
       if idx >= 0 then
-        ID := Cardinal(wblf[ls].fStrings.Objects[idx])
+        ID := PtrUInt(wblf[ls].fStrings.Objects[idx])
       else
         wblf[ls].AddString(ID, aValue);
     end else
@@ -767,7 +768,7 @@ begin
   end;
 end;
 
-function TwbLocalizationHandler.SetValue(ID: Cardinal; aElement: IwbElement; const aValue: string): Cardinal;
+function TwbLocalizationHandler.SetValue(ID: PtrUInt; aElement: IwbElement; const aValue: string): PtrUInt;
 var
   idx: integer;
   FileName: string;
@@ -800,7 +801,7 @@ begin
 end;
 
 
-function TwbLocalizationHandler.GetValue(ID: Cardinal; aElement: IwbElement; out aValue: string): Boolean;
+function TwbLocalizationHandler.GetValue(ID: PtrUInt; aElement: IwbElement; out aValue: string): Boolean;
 var
   lFileName: string;
   idx: integer;

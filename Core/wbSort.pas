@@ -10,10 +10,22 @@ unit wbSort;
 
 {$I wbDefines.inc}
 
+{$mode Delphi}
+
 interface
 
 uses
-  System.Classes;
+  Classes, wbInterface;
+
+type
+  TwbMove = procedure(const Source; var Dest; Count : Integer);
+
+var
+  wbMove: TwbMove = nil;
+
+const
+  // x64 - use InsertionSort instead MergeSort for small arrays
+  MIN_SIZE = 32;
 
 type
   TListSortComparePtr = TListSortCompare;
@@ -43,19 +55,6 @@ type
   end;
 
 implementation
-
-uses
-  wbInterface;
-
-type
-  TwbMove = procedure(const Source; var Dest; Count : Integer);
-
-var
-  wbMove    : TwbMove = nil;
-
-const
-  // x64 - use InsertionSort instead MergeSort for small arrays
-  MIN_SIZE = 32;
 
 procedure InsertionSortPtr(aList: PwbPointerArray; left, right: integer; aCompare: TListSortComparePtr);
 var

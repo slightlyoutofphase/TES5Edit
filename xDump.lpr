@@ -23,13 +23,13 @@ uses
   nxExceptionHook,
   {$ENDIF}
 
-  System.Classes,
-  System.IniFiles,
-  System.SysUtils,
-  System.TypInfo,
-  System.Win.Registry,
+  Classes,
+  IniFiles,
+  SysUtils,
+  TypInfo,
+  //System.Win.Registry,
 
-  WinApi.Windows,
+  //WinApi.Windows,
 
   wbBSA in 'Core\wbBSA.pas',
   wbCommandLine in 'Core\wbCommandLine.pas',
@@ -57,12 +57,6 @@ uses
   wbDefinitionsSF1 in 'Core\wbDefinitionsSF1.pas';
 
 {$R *.res}
-{$MAXSTACKSIZE 2097152}
-
-const
-  IMAGE_FILE_LARGE_ADDRESS_AWARE = $0020;
-
-{$SetPEFlags IMAGE_FILE_LARGE_ADDRESS_AWARE}
 
 var
   StartTime            : TDateTime;

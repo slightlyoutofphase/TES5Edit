@@ -20,10 +20,10 @@ function wbCreateContainerHandler: IwbContainerHandler;
 implementation
 
 uses
-  System.Classes,
-  System.Generics.Collections,
+  Classes,
+  Generics.Collections,
   System.IOUtils,
-  System.SysUtils,
+  SysUtils,
 
   wbBSArchive,
   wbHash;
