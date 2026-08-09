@@ -2,7 +2,7 @@
 
 xEdit 4.0.0 by ElminsterAU. Updates since 2012 include TES5Edit/SSEEdit/FO4Edit by Hlp, Zilav and Sharlikran. LOD management by Sheson.
 
-**IMPORTANT: This (very WIP) Free Pascal / Lazarus port explicitly requires the ["Unleashed" fork of trunk FPC and Lazarus](https://github.com/orgs/unleashedpascal/repositories) for the additional Delphi compatibility they add over the regular trunk versions. This will likely alwways the case.**
+**IMPORTANT: This (very WIP) Free Pascal / Lazarus port explicitly requires the ["Unleashed" fork of trunk FPC and Lazarus](https://github.com/orgs/unleashedpascal/repositories) for the additional Delphi compatibility they add over the regular trunk versions. This will likely always the case.**
 
 ## GitHub Issue Tracker
 
