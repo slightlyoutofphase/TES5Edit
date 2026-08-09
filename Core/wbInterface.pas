@@ -22,18 +22,18 @@ uses
   Generics.Defaults,
   SysUtils,
   System.UITypes,
-
   Graphics,
-
   wbHash,
   wbStreams,
-  wbExtra,
-  sortbase;
+  wbExtra;
 
 type
   TwbNothing = wbStreams.TwbNothing;
+  
   TProc = reference to procedure;
+  
   TProc<T> = reference to procedure(Arg1: T);
+  
   TRGBTriple = packed record
     rgbtBlue: Byte;
     rgbtGreen: Byte;
@@ -19604,19 +19604,15 @@ end;
 function TwbCallbackDef.CanAssign(const aElement: IwbElement; aIndex: Integer; const aDef: IwbDef): Boolean;
 var
   CallbackDef: IwbCallbackDef;
-  A, B: TwBIntToStrCallback; // <-- use the real callback type returned by GetCallback
+  A, B: TwBIntToStrCallback; 
 begin
   if dfDontAssign in defFlags then
     Exit(False);
-
   Result := Supports(aDef, IwbCallbackDef, CallbackDef);
   if Result then
   begin
-    A := CallbackDef.Callback; // assignment does not invoke the proc value
+    A := CallbackDef.Callback;
     B := GetCallback;
-    Result := CompareMem(@A, @B, SizeOf(A));
-    // or, if equality is allowed for that procedural type:
-    // Result := A = B;
   end;
 end;
 
